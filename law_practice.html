@@ -1,0 +1,2645 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>法規練習系統</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Microsoft JhengHei',sans-serif;background:#FAF6F1;color:#3E2723;font-size:15px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h1{text-align:center;margin:12px 0 20px;color:#8B5E3C;font-size:22px}
+.tabs{display:flex;border-bottom:2px solid #8B5E3C;margin-bottom:18px;gap:4px}
+.tb{padding:10px 22px;cursor:pointer;border:none;background:#E8C9A0;font-size:15px;color:#3E2723;border-bottom:3px solid transparent;font-family:inherit;border-radius:6px 6px 0 0}
+.tb.on{color:#fff;background:#8B5E3C;border-bottom-color:#8B5E3C;font-weight:bold}
+.tc{display:none}.tc.on{display:block}
+.card{background:#FFF8F2;border-radius:8px;padding:18px;box-shadow:0 2px 8px rgba(139,94,60,.15);margin-bottom:14px}
+.btn{padding:7px 15px;border:none;border-radius:4px;cursor:pointer;font-size:14px;font-family:inherit}
+.bp{background:#8B5E3C;color:#fff}.bp:hover{background:#6F4A2E}
+.bs{background:#6B8F5E;color:#fff}.bs:hover{background:#587549}
+.bd{background:#C0614A;color:#fff}.bd:hover{background:#9C4B3A}
+.bg{background:#E8C9A0;color:#3E2723}.bg:hover{background:#C4956A}
+textarea{width:100%;padding:10px;border:1px solid #D4A876;border-radius:4px;font-family:inherit;font-size:14px;resize:vertical;min-height:140px;line-height:1.7}
+.cdisp{font-size:14px;line-height:2;word-break:break-all;background:#F5EBE0;padding:14px;border-radius:4px;border:1px solid #E8D5C0;min-height:50px;white-space:pre-wrap}
+.ok{color:#6B8F5E}.err{color:#C0614A;text-decoration:underline}
+.sbar{display:flex;gap:14px;padding:8px 0;flex-wrap:wrap}
+.si{background:#F3E6D8;padding:7px 13px;border-radius:4px;font-size:13px}
+.lf{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.lc{display:flex;align-items:center;gap:6px;cursor:pointer;padding:6px 12px;background:#F3E6D8;border-radius:4px;font-size:14px}
+.lc input{cursor:pointer}
+.adisp{background:#FFF8F2;border:1px solid #D4A876;border-radius:4px;padding:14px;margin-bottom:14px;white-space:pre-wrap;line-height:1.9;font-size:14px}
+select,input[type=text]{padding:7px;border:1px solid #D4A876;border-radius:4px;font-family:inherit;font-size:14px}
+.kr{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.bb{display:inline-block;min-width:56px;padding:2px 8px;margin:1px 3px;border:2px solid #8B5E3C;border-radius:4px;cursor:pointer;background:#F3E6D8;text-align:center;font-size:14px}
+.bb.ok{background:#DCE8D2;border-color:#6B8F5E;cursor:default}
+.bb.err{background:#F5DCD3;border-color:#C0614A;cursor:default}
+.oa{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.ob{padding:6px 12px;border:1px solid #8B5E3C;border-radius:4px;cursor:pointer;background:#FFF8F2;font-size:14px;font-family:inherit}
+.ob:hover{background:#F5E6D3}
+.ee{border:1px solid #E8D5C0;border-radius:4px;padding:10px;margin-bottom:8px}
+.ee:hover{background:#F5EBE0}
+.eb{cursor:pointer;color:#8B5E3C;font-size:13px}
+.ed{display:none;margin-top:8px;padding-top:8px;border-top:1px solid #E8D5C0}
+.ed.show{display:block}
+.cb{display:inline-block;background:#C0614A;color:#fff;border-radius:10px;padding:2px 7px;font-size:12px}
+.star-btn{background:none;border:none;cursor:pointer;font-size:22px;color:#E07B39;line-height:1;padding:0 4px;vertical-align:middle}
+.star-btn:hover{opacity:.7}
+.tmr{font-size:18px;font-weight:bold;color:#6B8F5E;min-width:44px;text-align:center;display:inline-block}
+.tmr.warn{color:#C0614A;animation:blink .6s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.note-btn{background:none;border:1px solid #C4956A;border-radius:4px;cursor:pointer;font-size:12px;padding:2px 8px;color:#795548;font-family:inherit}
+.note-btn:hover{border-color:#8B5E3C;color:#8B5E3C}
+.npanel{margin-top:10px;padding:10px;background:#FFF3DF;border:1px solid #E8C9A0;border-radius:4px}
+.npanel textarea{min-height:60px;background:#FFF3DF;border:1px solid #E8C9A0}
+.hl{background:#F0C987;border-radius:2px;padding:0 1px}
+.qkb{padding:4px 10px;border:1px solid #8B5E3C;border-radius:14px;cursor:pointer;background:#FFF8F2;font-size:13px;color:#8B5E3C;font-family:inherit}
+.qkb:hover{background:#8B5E3C;color:#fff}
+.cmp-law{margin-bottom:16px}
+.cmp-law h4{padding:8px 14px;background:#8B5E3C;color:#fff;border-radius:4px 4px 0 0;font-size:15px}
+.cmp-art{border:1px solid #D4A876;border-top:none;padding:12px 14px;font-size:14px;line-height:1.85;white-space:pre-wrap;word-break:break-all}
+.cmp-art+.cmp-art{border-top:1px solid #E8D5C0}
+.cmp-law .cmp-art:last-child{border-radius:0 0 4px 4px}
+.diff-block{margin-top:14px;padding:12px 14px;background:#FBF2E9;border:1px solid #D4A876;border-radius:4px}
+.diff-block h4{font-size:13px;font-weight:bold;color:#795548;margin-bottom:10px;letter-spacing:.5px}
+.diff-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.diff-tag{font-size:12px;font-weight:bold;color:#795548;min-width:60px;white-space:nowrap;padding-top:3px;flex-shrink:0}
+.diff-text{font-size:14px;line-height:1.85;word-break:break-all;flex:1;white-space:pre-wrap;background:#FFF8F2;padding:6px 8px;border-radius:3px;border:1px solid #E8D5C0}
+.dc-ok{color:#6B8F5E}
+.dc-wrong{color:#C0614A;background:#F5DCD3;border-radius:2px;padding:0 1px}
+.dc-miss{color:#C0614A;background:#F5DCD3;border-bottom:2px solid #C0614A;display:inline-block;min-width:.7em;border-radius:2px 2px 0 0}
+.diff-cnt{font-size:13px;color:#9C8778;text-align:right;margin-top:2px}
+.plan-day{border:1px solid #D4A876;border-radius:8px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;background:#FFF8F2}
+.plan-day .plan-summary{font-size:14px;color:#795548;margin-top:4px;white-space:pre-wrap}
+.plan-day .plan-review-summary{font-size:13px;color:#C0614A;margin-top:4px;white-space:pre-wrap}
+.plan-day .plan-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.plan-day .status{padding:5px 10px;border-radius:14px;font-size:13px;color:#fff;white-space:nowrap}
+.plan-day .status.completed{background:#6B8F5E}
+.plan-day .status.today{background:#8B5E3C}
+.plan-day .status.pending{background:#E8C9A0;color:#3E2723}
+.plan-card-toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.plan-card-toolbar strong{font-size:16px;color:#8B5E3C}
+.plan-card-summary{font-size:13px;color:#795548}
+.reminder-box{background:#FFF3E0;border:1px solid #E07B39;border-left:5px solid #E07B39;border-radius:6px;padding:14px 16px;margin-bottom:14px}
+.reminder-box h4{color:#E07B39;font-size:15px;margin-bottom:8px}
+.reminder-item{font-size:14px;color:#3E2723;margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>📚 法規練習系統</h1>
+<div class="tabs">
+  <button class="tb on" onclick="ST('t1')">抽題模式</button>
+  <button class="tb" onclick="ST('t2')">挖空選擇題</button>
+  <button class="tb" onclick="ST('t3')">錯題檢討</button>
+  <button class="tb" onclick="ST('t4')">錯題記錄本</button>
+  <button class="tb" onclick="ST('t5')">條文比較</button>
+  <button class="tb" onclick="ST('t6')">每日計畫練習</button>
+</div>
+
+<!-- Tab1 -->
+<div id="t1" class="tc on">
+  <div class="card">
+    <div class="lf" id="lf"></div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn bp" onclick="draw()">抽題</button>
+      <span id="albl" style="font-size:14px;color:#795548"></span>
+      <button class="star-btn" id="sb1" style="display:none" onclick="togStar1()" title="星號標記">☆</button>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:#795548">
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none">
+        <input type="checkbox" id="t1tc" onchange="tmrToggle1()">⏱ 計時模式
+      </label>
+      <span id="t1tsec_wrap" style="display:none;align-items:center;gap:5px">
+        每題 <input type="number" id="t1tsec" value="30" min="5" max="300" style="width:60px;padding:4px"> 秒
+      </span>
+    </div>
+  </div>
+  <div id="t1art" class="card" style="display:none">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:4px;min-height:24px">
+      <span id="tmr1" class="tmr" style="display:none"></span>
+    </div>
+    <div class="adisp" id="t1hint" style="display:none;border:1px solid #E8C9A0;background:#FFF3DF"></div>
+    <label style="font-size:14px;font-weight:bold;display:block;margin-bottom:6px">請從記憶中輸入條文內容：</label>
+    <textarea id="t1in" placeholder="請在此輸入完整條文..."></textarea>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn bs" onclick="chk()">比對</button>
+      <button class="btn bg" onclick="showan()">顯示答案</button>
+      <button class="btn bp" onclick="draw()">換題</button>
+      <button class="note-btn" id="t1nb_btn" onclick="togNoteT1()">📝 筆記</button>
+    </div>
+    <div id="t1np" style="display:none" class="npanel">
+      <textarea id="t1nta" placeholder="輸入此條文的筆記..." style="width:100%;box-sizing:border-box"></textarea>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn bs" style="font-size:13px;padding:4px 10px" onclick="saveNoteT1()">儲存</button>
+        <button class="btn bg" style="font-size:13px;padding:4px 10px" onclick="eid('t1np').style.display='none'">關閉</button>
+      </div>
+    </div>
+  </div>
+  <div id="t1res" class="card" style="display:none">
+    <div class="cdisp" id="t1cr"></div>
+    <div id="t1diff" class="diff-block" style="display:none">
+      <h4>📊 差異對照</h4>
+      <div class="diff-row">
+        <span class="diff-tag">您的答案</span>
+        <span id="t1d1" class="diff-text"></span>
+      </div>
+      <div class="diff-row">
+        <span class="diff-tag">正確答案</span>
+        <span id="t1d2" class="diff-text"></span>
+      </div>
+      <div id="t1dcnt" class="diff-cnt"></div>
+    </div>
+    <div class="sbar" id="t1sb"></div>
+  </div>
+  <div class="card"><div class="sbar" id="t1ts"></div></div>
+</div>
+
+<!-- Tab2 -->
+<div id="t2" class="tc">
+  <div class="card" id="t2s">
+    <h3 style="margin-bottom:14px">設定題目</h3>
+    <div style="margin-bottom:14px">
+      <label style="font-size:14px;font-weight:bold">選擇法規：</label><br>
+      <select id="t2sel" style="margin-top:6px;width:200px"></select>
+    </div>
+    <div id="t2kw">
+      <div class="kr" id="kr0">
+        <input type="text" placeholder="關鍵字" class="kw" style="width:110px">
+        <input type="text" placeholder="選項A" class="ko" style="width:70px">
+        <input type="text" placeholder="選項B" class="ko" style="width:70px">
+        <input type="text" placeholder="選項C（可選）" class="ko" style="width:95px">
+        <input type="text" placeholder="選項D（可選）" class="ko" style="width:95px">
+      </div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px;color:#795548">
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none">
+        <input type="checkbox" id="t2tc" onchange="tmrToggle2()">⏱ 計時模式
+      </label>
+      <span id="t2tsec_wrap" style="display:none;align-items:center;gap:5px">
+        每題 <input type="number" id="t2tsec" value="30" min="5" max="300" style="width:60px;padding:4px"> 秒
+      </span>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn bg" onclick="addKR()">＋ 新增關鍵字</button>
+      <button class="btn bp" onclick="startQ()">開始練習</button>
+    </div>
+  </div>
+  <div id="t2q" style="display:none">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          <span id="t2prog" style="font-size:14px;color:#795548"></span>
+          <button class="star-btn" id="sb2" onclick="togStar2()" title="星號標記">☆</button>
+          <button class="note-btn" id="t2nb_note" onclick="togNoteT2()">📝 筆記</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span id="tmr2" class="tmr" style="display:none"></span>
+          <span id="t2sc" style="font-size:14px;font-weight:bold"></span>
+        </div>
+      </div>
+      <div id="t2np" style="display:none" class="npanel">
+        <textarea id="t2nta" placeholder="輸入此條文的筆記..." style="width:100%;box-sizing:border-box"></textarea>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <button class="btn bs" style="font-size:13px;padding:4px 10px" onclick="saveNoteT2()">儲存</button>
+          <button class="btn bg" style="font-size:13px;padding:4px 10px" onclick="eid('t2np').style.display='none'">關閉</button>
+        </div>
+      </div>
+      <div id="t2qc" style="line-height:2.2;font-size:15px"></div>
+      <div class="oa" id="t2oa"></div>
+      <div style="margin-top:14px;display:flex;gap:10px">
+        <button class="btn bg" id="t2nb" onclick="nextQ()" style="display:none">下一題 →</button>
+        <button class="btn bg" onclick="endQ()">結束練習</button>
+      </div>
+    </div>
+  </div>
+  <div id="t2d" style="display:none">
+    <div class="card" style="text-align:center">
+      <h3 style="margin-bottom:12px">練習完成！</h3>
+      <div id="t2fs" style="font-size:17px;margin:12px 0;line-height:2"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn bp" onclick="ST('t3')">查看錯題</button>
+        <button class="btn bg" onclick="rstQ()">重新設定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab3 -->
+<div id="t3" class="tc">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <h3>錯題檢討</h3>
+      <button class="btn bp" id="t3rb" onclick="rePrac()" style="display:none">重新練習錯題</button>
+    </div>
+    <div id="t3c"><p style="color:#9C8778">尚未完成練習，請先至「挖空選擇題」進行。</p></div>
+  </div>
+</div>
+
+<!-- Tab4 -->
+<div id="t4" class="tc">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <h3>錯題記錄本</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn bp" onclick="pracLog()">從記錄練習</button>
+        <button class="btn bd" onclick="clrLog()">清除記錄</button>
+      </div>
+    </div>
+    <div id="t4c"><p style="color:#9C8778">暫無錯題記錄。</p></div>
+  </div>
+  <div class="card" style="border-top:3px solid #E07B39">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <h3>★ 星號標記題目</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn bp" onclick="pracStar()">針對星號題目練習</button>
+        <button class="btn bd" onclick="clrStar()">取消全部標記</button>
+      </div>
+    </div>
+    <div id="t4star"><p style="color:#9C8778">尚無星號標記題目。</p></div>
+  </div>
+  <div class="card" style="border-top:3px solid #E8C9A0">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <h3>📝 我的筆記</h3>
+      <button class="btn bd" onclick="clrNotes()">清除所有筆記</button>
+    </div>
+    <div id="t4notes"><p style="color:#9C8778">尚無筆記。</p></div>
+  </div>
+</div>
+
+<!-- Tab5 -->
+<div id="t5" class="tc">
+  <div class="card">
+    <h3 style="margin-bottom:14px">🔍 條文比較 / 關鍵字索引</h3>
+    <div style="margin-bottom:14px">
+      <div style="font-size:14px;font-weight:bold;margin-bottom:8px">篩選法規：</div>
+      <div id="t5lf" style="display:flex;flex-wrap:wrap;gap:10px"></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+      <input type="text" id="t5kw" placeholder="輸入關鍵字搜尋..." style="flex:1;min-width:160px" onkeydown="if(event.key==='Enter')searchKW()">
+      <button class="btn bp" onclick="searchKW()">🔍 搜尋</button>
+      <button class="btn bg" onclick="clrCmp()">清除</button>
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:13px;color:#795548;margin-bottom:8px">常用關鍵字：</div>
+      <div id="t5qk" style="display:flex;flex-wrap:wrap;gap:7px"></div>
+    </div>
+    <div id="t5stat" style="font-size:13px;color:#795548;margin-bottom:10px;font-weight:bold"></div>
+    <div id="t5res"></div>
+  </div>
+</div>
+
+<!-- Tab6 -->
+<div id="t6" class="tc">
+  <div class="card">
+    <h3 style="margin-bottom:14px">📅 每日計畫練習</h3>
+    <div class="lf" style="flex-wrap:wrap">
+      <div style="min-width:180px">
+        <label style="font-size:14px;font-weight:bold">選擇要練習的法律：</label><br>
+        <select id="t6law" style="margin-top:6px;width:100%;max-width:260px"></select>
+      </div>
+      <div style="min-width:180px">
+        <label style="font-size:14px;font-weight:bold">每天要背幾條：</label><br>
+        <input type="number" id="t6count" value="5" min="1" style="width:100%;max-width:120px;margin-top:6px">
+      </div>
+      <div style="min-width:180px">
+        <label style="font-size:14px;font-weight:bold">開始日期：</label><br>
+        <input type="date" id="t6start" style="margin-top:6px;width:100%;max-width:180px">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn bp" onclick="createPlan()">建立計畫</button>
+      <button class="btn bd" onclick="resetPlans()">重設計畫</button>
+    </div>
+  </div>
+  <div id="t6reminder"></div>
+  <div id="t6plans" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px"></div>
+  <div id="t6practice" class="card" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+      <div>
+        <h3 id="t6pracTitle" style="margin-bottom:4px">今日練習</h3>
+        <div id="t6pracSubtitle" style="font-size:14px;color:#795548"></div>
+      </div>
+      <div style="text-align:right">
+        <div id="t6stageBadge" style="font-size:14px;font-weight:bold;color:#8B5E3C"></div>
+        <div id="t6stageSteps" style="font-size:12px;margin-top:6px"></div>
+        <button class="btn bg" style="margin-top:8px" onclick="closeT6Practice()">回進度表</button>
+      </div>
+    </div>
+
+    <!-- 第一階段：閱讀理解 -->
+    <div id="t6readCard" style="display:none">
+      <div class="adisp" id="t6readText" style="min-height:120px;background:#FFF3E0;border:1px solid #E8C9A0"></div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap">
+        <button class="star-btn" id="t6readStarBtn" onclick="t6ReadToggleStar()" title="標記重點">☆</button>
+        <button class="note-btn" id="t6readNoteBtn" onclick="t6ReadToggleNote()">📝 新增筆記</button>
+      </div>
+      <div id="t6readNotePanel" class="npanel" style="display:none">
+        <textarea id="t6readNoteText" placeholder="輸入此條文的筆記或重點..." style="width:100%;box-sizing:border-box"></textarea>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <button class="btn bs" style="font-size:13px;padding:4px 10px" onclick="t6ReadSaveNote()">儲存</button>
+          <button class="btn bg" style="font-size:13px;padding:4px 10px" onclick="eid('t6readNotePanel').style.display='none'">關閉</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:10px">
+        <span id="t6readCounter" style="font-size:14px;color:#795548"></span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn bg" id="t6readPrev" onclick="t6ReadPrev()">← 上一條</button>
+          <button class="btn bp" id="t6readNext" onclick="t6ReadNext()">下一條 →</button>
+          <button class="btn bs" id="t6readStartBtn" style="display:none" onclick="t6StartRecite()">開始默寫練習</button>
+          <button class="btn bg" onclick="t6SkipRead()">跳過閱讀</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二/三階段：默寫練習 -->
+    <div id="t6pracCard" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div>
+          <strong id="t6pracStage"></strong> - <span id="t6pracLabel"></span>
+        </div>
+        <div><span id="t6pracCounter" style="font-size:14px;color:#795548"></span></div>
+      </div>
+      <div class="adisp" id="t6pracText" style="min-height:50px;background:#FFF3E0;border:1px solid #E8C9A0"></div>
+      <label style="font-size:14px;font-weight:bold;display:block;margin:12px 0 6px">請輸入這條文內容：</label>
+      <textarea id="t6pracInput" placeholder="輸入完整條文..." style="min-height:140px"></textarea>
+      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn bs" onclick="t6Check()">比對</button>
+        <button class="btn bg" onclick="t6ShowAnswer()">顯示答案</button>
+        <button class="btn bg" id="t6pracNextBtn" onclick="t6Next()">下一題</button>
+      </div>
+      <div id="t6pracResult" style="display:none;margin-top:14px"></div>
+    </div>
+
+    <!-- 第四階段：今日成績總結 -->
+    <div id="t6summaryCard" class="card" style="display:none;text-align:center"></div>
+  </div>
+</div>
+</div>
+
+<script>
+// ===== LAW DATA =====
+const LAWS = {
+'預算法':[{n:'1',t:`中華民國中央政府預算之籌劃、編造、審議、成立及執行，依本法之規定。
+
+預算以提供政府於一定期間完成作業所需經費為目的。
+
+預算之編製及執行應以財務管理為基礎，並遵守總體經濟均衡之原則。`},{n:'2',t:`各主管機關依其施政計畫初步估計之收支，稱概算；預算之未經立法程序者，稱預算案；其經立法程序而公布者，稱法定預算；在法定預算範圍內，由各機關依法分配實施之計畫，稱分配預算。`},{n:'3',t:`稱各機關者，謂中央政府各級機關；稱機關單位者，謂本機關及所屬機關，無所屬機關者，本機關自為一機關單位。
+
+前項本機關為該機關單位之主管機關。
+
+各級機關單位之分級，由中央主計機關定之。`},{n:'4',t:`稱基金者，謂已定用途而已收入或尚未收入之現金或其他財產。基金分左列二類︰
+
+一、普通基金︰歲入之供一般用途者，為普通基金。
+
+二、特種基金︰歲入之供特殊用途者，為特種基金，其種類如左︰
+
+（一）供營業循環運用者，為營業基金。
+
+（二）依法定或約定之條件，籌措財源供償還債本之用者，為債務基金。
+
+（三）為國內外機關、團體或私人之利益，依所定條件管理或處分者，為信託基金。
+
+（四）凡經付出仍可收回，而非用於營業者，為作業基金。
+
+（五）有特定收入來源而供特殊用途者，為特別收入基金。
+
+（六）處理政府機關重大公共工程建設計畫者，為資本計畫基金。
+
+特種基金之管理，得另以法律定之。`},{n:'5',t:`稱經費者，謂依法定用途與條件得支用之金額。經費按其得支用期間分左列三種︰
+
+一、歲定經費，以一會計年度為限。
+
+二、繼續經費，依設定之條件或期限，分期繼續支用。
+
+三、法定經費，依設定之條件，於法律存續期間按年支用。
+
+法定經費之設定、變更或廢止，以法律為之。`},{n:'6',t:`稱歲入者，謂一個會計年度之一切收入。但不包括債務之舉借及以前年度歲計賸餘之移用。
+
+稱歲出者，謂一個會計年度之一切支出。但不包括債務之償還。
+
+歲入、歲出之差短，以公債、賒借或以前年度歲計賸餘撥補之。`},{n:'7',t:`稱未來承諾之授權者，謂立法機關授權行政機關，於預算當期會計年度，得為國庫負擔債務之法律行為，而承諾於未來會計年度支付經費。`},{n:'8',t:`政府機關於未來四個會計年度所需支用之經費，立法機關得為未來承諾之授權。
+
+前項承諾之授權，應以一定之金額於預算內表達。`},{n:'9',t:`因擔保、保證或契約可能造成未來會計年度內之支出者，應於預算書中列表說明；其對國庫有重大影響者，並應向立法院報告。`},{n:'10',t:`歲入、歲出預算，按其收支性質分為經常門、資本門。
+
+歲入，除減少資產及收回投資為資本收入應屬資本門外，均為經常收入，應列經常門。
+
+歲出，除增置或擴充、改良資產及增加投資為資本支出，應屬資本門外，均為經常支出，應列經常門。`},{n:'11',t:`政府預算，每一會計年度辦理一次。`},{n:'12',t:`政府會計年度於每年一月一日開始，至同年十二月三十一日終了，以當年之中華民國紀元年次為其年度名稱。`},{n:'13',t:`政府歲入與歲出、債務之舉借與以前年度歲計賸餘之移用及債務之償還，均應編入其預算。並得編列會計年度內可能支付之現金及所需未來承諾之授權。`},{n:'14',t:`政府歲入之年度劃分如左︰
+
+一、歲入科目有明定所屬時期者，歸入該時期所屬之年度。
+
+二、歲入科目未明定所屬時期，而定有繳納期限者，歸入繳納期開始日所屬之年度。
+
+三、歲入科目未明定所屬時期及繳納期限者，歸入該收取權利發生日所屬之年度。`},{n:'15',t:`政府歲出之年度劃分如左︰
+
+一、歲出科目有明定所屬時期者，歸入該時期所屬之年度。
+
+二、歲出科目未明定所屬時期，而定有支付期限者，歸入支付期開始日所屬之年度。
+
+三、歲出科目未明定所屬時期及支付期限者，歸入該支付義務發生日所屬之年度。`},{n:'16',t:`預算分左列各種︰
+
+一、總預算。
+
+二、單位預算。
+
+三、單位預算之分預算。
+
+四、附屬單位預算。
+
+五、附屬單位預算之分預算。`},{n:'17',t:`政府每一會計年度，各就其歲入與歲出、債務之舉借與以前年度歲計賸餘之移用及債務之償還全部所編之預算，為總預算。
+
+前項總預算歲入、歲出應以各單位預算之歲入、歲出總額及附屬單位預算歲入、歲出之應編入部分，彙整編成之。
+
+總預算、單位預算中，除屬於特種基金之預算外，均為普通基金預算。`},{n:'18',t:`左列預算為單位預算︰
+
+一、在公務機關，有法定預算之機關單位之預算。
+
+二、在特種基金，應於總預算中編列全部歲入、歲出之基金之預算。`},{n:'19',t:`特種基金，應以歲入、歲出之一部編入總預算者，其預算均為附屬單位預算。
+
+特種基金之適用附屬單位預算者，除法律另有規定外，依本法之規定。`},{n:'20',t:`單位預算或附屬單位預算內，依機關別或基金別所編之各預算，為單位預算之分預算或附屬單位預算之分預算。`},{n:'21',t:`政府設立之特種基金，除其預算編製程序依本法規定辦理外，其收支保管辦法，由行政院定之，並送立法院。`},{n:'22',t:`預算應設預備金，預備金分第一預備金及第二預備金二種︰
+
+一、第一預備金於公務機關單位預算中設定之，其數額不得超過經常支出總額百分之一。
+
+二、第二預備金於總預算中設定之，其數額視財政情況決定之。
+
+立法院審議刪除或刪減之預算項目及金額，不得動支預備金。但法定經費或經立法院同意者，不在此限。
+
+各機關動支預備金，其每筆數額超過五千萬元者，應先送立法院備查。但因緊急災害動支者，不在此限。`},{n:'23',t:`政府經常收支，應保持平衡，非因預算年度有異常情形，資本收入、公債與賒借收入及以前年度歲計賸餘不得充經常支出之用。但經常收支如有賸餘，得移充資本支出之財源。`},{n:'24',t:`政府徵收賦稅、規費及因實施管制所發生之收入，或其他有強制性之收入，應先經本法所定預算程序。但法律另有規定者，不在此限。`},{n:'25',t:`政府不得於預算所定外，動用公款、處分公有財物或為投資之行為。
+
+違背前項規定之支出，應依民法無因管理或侵權行為之規定請求返還。`},{n:'26',t:`政府大宗動產、不動產之買賣或交換，均須依據本法所定預算程序為之。`},{n:'27',t:`政府非依法律，不得於其預算外增加債務；其因調節短期國庫收支而發行國庫券時，依國庫法規定辦理。`},{n:'28',t:`中央主計機關、中央經濟建設計畫主管機關、審計機關、中央財政主管機關及其他有關機關應於籌劃擬編概算前，依下列所定範圍，將可供決定下年度施政方針之參考資料送行政院：
+
+一、中央主計機關應供給以前年度財政經濟狀況之會計統計分析資料，與下年度全國總資源供需之趨勢，及增進公務暨財務效能之建議。
+
+二、中央經濟建設計畫主管機關應供給以前年度重大經濟建設計畫之檢討意見與未來展望。
+
+三、審計機關應供給審核以前年度預算執行之有關資料，及財務上增進效能與減少不經濟支出之建議。
+
+四、中央財政主管機關應供給以前年度收入狀況，財務上增進效能與減少不經濟支出之建議及下年度財政措施，與最大可能之收入額度。
+
+五、其他有關機關應供給與決定施政方針有關之資料。`},{n:'29',t:`行政院應編製國富統計、綠色國民所得帳及關於稅式支出、移轉性支付之報告。
+
+前項報告內容應於政府網站公開。`},{n:'30',t:`行政院應於年度開始九個月前，訂定下年度之施政方針。`},{n:'31',t:`中央主計機關應遵照施政方針，擬訂下年度預算編製辦法，呈報行政院核定，分行各機關依照辦理。`},{n:'32',t:`各主管機關遵照施政方針，並依照行政院核定之預算籌編原則及預算編製辦法，擬定其所主管範圍內之施政計畫及事業計畫與歲入、歲出概算，送行政院。
+
+前項施政計畫，其新擬或變更部分超過一年度者，應附具全部計畫。`},{n:'33',t:`前條所定之施政計畫及概算，得視需要，為長期之規劃擬編；其辦法由行政院定之。`},{n:'34',t:`重要公共工程建設及重大施政計畫，應先行製作選擇方案及替代方案之成本效益分析報告，並提供財源籌措及資金運用之說明，始得編列概算及預算案，並送立法院備查。`},{n:'35',t:`中央主計機關依法審核各類概算時，應視事實需要，聽取各主管機關關於所編概算內容之說明。`},{n:'36',t:`行政院根據中央主計機關之審核報告，核定各主管機關概算時，其歲出部分得僅核定其額度，分別行知主管機關轉令其所屬機關，各依計畫，並按照編製辦法，擬編下年度之預算。`},{n:'37',t:`各機關單位預算，歲入應按來源別科目編製之，歲出應按政事別、計畫或業務別與用途別科目編製之，各項計畫，除工作量無法計算者外，應分別選定工作衡量單位，計算公務成本編列。`},{n:'38',t:`各機關單位補助地方政府之經費，應於總預算案中彙總列表說明。`},{n:'39',t:`繼續經費預算之編製，應列明全部計畫之內容、經費總額、執行期間及各年度之分配額，依各年度之分配額，編列各該年度預算。`},{n:'40',t:`單位預算應編入總預算者，在歲入為來源別科目及其數額，在歲出為計畫或業務別科目及其數額。但涉及國家機密者，得分別編列之。`},{n:'41',t:`各機關單位預算及附屬單位預算，應分別依照規定期限送達各該主管機關。
+
+各國營事業機關所屬各部門或投資經營之其他事業，其資金獨立自行計算盈虧者，應附送各該部門或事業之分預算。
+
+各部門投資或經營之其他事業及政府捐助之財團法人，每年應由各該主管機關就以前年度投資或捐助之效益評估，併入決算辦理後，分別編製營運及資金運用計畫送立法院。
+
+政府捐助基金累計超過百分之五十之財團法人及日本撤退臺灣接收其所遺留財產而成立之財團法人，每年應由各該主管機關將其年度預算書，送立法院審議。`},{n:'42',t:`各主管機關應審核其主管範圍內之歲入、歲出預算及事業預算，加具意見，連同各所屬機關以及本機關之單位預算，暨附屬單位預算，依規定期限，彙轉中央主計機關；同時應將整編之歲入預算，分送中央財政主管機關。`},{n:'43',t:`各主管機關應將其機關單位之歲出概算，排列優先順序，供立法院審議之參考。
+
+前項規定，於中央主計機關編列中央政府總預算案時，準用之。`},{n:'44',t:`中央財政主管機關應就各主管機關所送歲入預算，加具意見，連同其主管歲入預算，綜合編送中央主計機關。`},{n:'45',t:`中央主計機關將各類歲出預算及中央財政主管機關綜合擬編之歲入預算，彙核整理，編成中央政府總預算案，並將各附屬單位預算，包括營業及非營業者，彙案編成綜計表，加具說明，連同各附屬單位預算，隨同總預算案，呈行政院提出行政院會議。
+
+前項總預算案歲入、歲出未平衡時，應會同中央財政主管機關提出解決辦法。`},{n:'46',t:`中央政府總預算案與附屬單位預算及其綜計表，經行政院會議決定後，交由中央主計機關彙編，由行政院於會計年度開始四個月前提出立法院審議，並附送施政計畫。`},{n:'47',t:`各機關概算、預算之擬編、核轉及核定期限以及應行編送之份數，除本法已有規定者外，由行政院定之。`},{n:'48',t:`立法院審議總預算案時，由行政院長、主計長及財政部長列席，分別報告施政計畫及歲入、歲出預算編製之經過。`},{n:'49',t:`預算案之審議，應注重歲出規模、預算餘絀、計畫績效、優先順序，其中歲入以擬變更或擬設定之收入為主，審議時應就來源別決定之；歲出以擬變更或擬設定之支出為主，審議時應就機關別、政事別及基金別決定之。`},{n:'50',t:`特種基金預算之審議，在營業基金以業務計畫、營業收支、生產成本、資金運用、轉投資及重大之建設事業為主；在其他特種基金，以基金運用計畫為主。`},{n:'51',t:`總預算案應於會計年度開始一個月前由立法院議決，並於會計年度開始十五日前由總統公布之；預算中有應守秘密之部分，不予公布。`},{n:'52',t:`法定預算附加條件或期限者，從其所定。但該條件或期限為法律所不許者，不在此限。
+
+立法院就預算案所為之附帶決議，應由各該機關單位參照法令辦理。`},{n:'53',t:`總預算案於立法院院會審議時，得限定議題及人數，進行正反辯論或政黨辯論。
+
+各委員會審查總預算案時，各機關首長應依邀請列席報告、備詢及提供有關資料，不得拒絕或拖延。`},{n:'54',t:`總預算案之審議，如不能依第五十一條期限完成時，各機關預算之執行，依下列規定為之：
+
+一、收入部分暫依上年度標準及實際發生數，覈實收入。
+
+二、支出部分：
+
+（一）新興資本支出及新增計畫，須俟本年度預算完成審議程序後始得動支。但依第八十八條規定辦理或經立法院同意者，不在此限。
+
+（二）前目以外計畫得依已獲授權之原訂計畫或上年度執行數，覈實動支。
+
+三、履行其他法定義務收支。
+
+四、因應前三款收支調度需要之債務舉借，覈實辦理。`},{n:'55',t:`各機關應按其法定預算，並依中央主計機關之規定編造歲入、歲出分配預算。
+
+前項分配預算，應依實施計畫按月或按期分配，均於預算實施前為之。`},{n:'56',t:`各機關分配預算，應遞轉中央主計機關核定之。`},{n:'57',t:`前條核定之分配預算，應即由中央主計機關通知中央財政主管機關及審計機關，並將核定情形，通知其主管機關及原編造機關。`},{n:'58',t:`各機關於分配預算執行期間，如因變更原定實施計畫，或調整實施進度及分配數，而有修改分配預算之必要者，其程序準用前三條之規定。`},{n:'59',t:`各機關執行歲入分配預算，應按各月或各期實際收納數額考核之；其超收應一律解庫，不得逕行坐抵或挪移墊用。`},{n:'60',t:`依法得出售之國有財產及股票，市價高於預算者，應依市價出售。`},{n:'61',t:`各機關執行歲出分配預算，應按月或分期實施計畫之完成進度與經費支用之實際狀況逐級考核之，並由中央主計機關將重要事項考核報告送立法院備查；其下月或下期之經費不得提前支用，遇有賸餘時，除依第六十九條辦理外，得轉入下月或下期繼續支用。但以同年度為限。`},{n:'62',t:`總預算內各機關、各政事及計畫或業務科目間之經費，不得互相流用。但法定由行政院統籌支撥之科目及第一預備金，不在此限。`},{n:'62-1',t:`基於行政中立、維護新聞自由及人民權益，政府各機關暨公營事業、政府捐助基金百分之五十以上成立之財團法人及政府轉投資資本百分之五十以上事業，編列預算於平面媒體、廣播媒體、網路媒體（含社群媒體）及電視媒體辦理政策及業務宣導，應明確標示其為廣告且揭示辦理或贊助機關、單位名稱，並不得以置入性行銷方式進行。
+
+前項辦理政策及業務宣導之預算，各主管機關應就其執行情形加強管理，按月於機關資訊公開區公布宣導主題、媒體類型、期程、金額、執行單位等事項，並於主計總處網站專區公布，按季送立法院備查。`},{n:'63',t:`各機關之歲出分配預算，其計畫或業務科目之各用途別科目中有一科目之經費不足，而他科目有賸餘時，得辦理流用，流入數額不得超過原預算數額百分之二十，流出數額不得超過原預算數額百分之二十。但不得流用為用人經費，且經立法院審議刪除或刪減之預算項目不得流用。`},{n:'64',t:`各機關執行歲出分配預算遇經費有不足時，應報請上級主管機關核定，轉請中央主計機關備案，始得支用第一預備金，並由中央主計機關通知審計機關及中央財政主管機關。`},{n:'65',t:`各機關應就預算配合計畫執行情形，按照中央主計機關之規定編製報告，呈報主管機關核轉中央主計機關、審計機關及中央財政主管機關。`},{n:'66',t:`中央主計機關對於各機關執行預算之情形，得視事實需要，隨時派員調查之。`},{n:'67',t:`各機關重大工程之投資計畫，超過四年未動用預算者，其預算應重行審查。`},{n:'68',t:`中央主計機關、審計機關及中央財政主管機關得實地調查預算及其對待給付之運用狀況，並得要求左列之人提供報告︰
+
+一、預算執行機關。
+
+二、公共工程之承攬人。
+
+三、物品或勞務之提供者。
+
+四、接受國家投資、合作、補助金或委辦費者。
+
+五、管理國家經費或財產者。
+
+六、接受國家分配預算者。
+
+七、由預算經費提供貸款、擔保或保證者。
+
+八、受託辦理調查、試驗、研究者。
+
+九、其他最終領取經費之人或受益者。`},{n:'69',t:`中央主計機關審核各機關報告，或依第六十六條規定實地調查結果發現該機關未按季或按期之進度完成預定工作，或原定歲出預算有節減之必要時，得協商其主管機關呈報行政院核定，將其已定分配數或以後各期分配數之一部或全部，列為準備，俟有實際需要，專案核准動支或列入賸餘辦理。`},{n:'70',t:`各機關有左列情形之一，得經行政院核准動支第二預備金及其歸屬科目金額之調整，事後由行政院編具動支數額表，送請立法院審議︰
+
+一、原列計畫費用因事實需要奉准修訂致原列經費不敷時。
+
+二、原列計畫費用因增加業務量致增加經費時。
+
+三、因應政事臨時需要必須增加計畫及經費時。`},{n:'71',t:`預算之執行，遇國家發生特殊事故而有裁減經費之必要時，得經行政院會議之決議，呈請總統以令裁減之。`},{n:'72',t:`會計年度結束後，各機關已發生尚未收得之收入，應即轉入下年度列為以前年度應收款；其經費未經使用者，應即停止使用。但已發生而尚未清償之債務或契約責任部分，經核准者，得轉入下年度列為以前年度應付款或保留數準備。`},{n:'73',t:`會計年度結束後，國庫賸餘應即轉入下年度。`},{n:'74',t:`第七十二條規定，轉入下年度之應付款及保留數準備，應於會計年度結束期間後十日內，報由主管機關核轉行政院核定，分別通知中央主計機關、審計機關及中央財政主管機關。`},{n:'75',t:`誤付透付之金額及依法墊付金額，或預付估付之賸餘金額，在會計年度結束後繳還者，均視為結餘，轉帳加入下年度之收入。`},{n:'76',t:`繼續經費之按年分配額，在一會計年度結束後，未經使用部分，得轉入下年度支用之。`},{n:'77',t:`總預算所列各附屬單位預算機關應行繳庫數，經立法程序審定後如有差異時，由行政院依照立法院最後審定數額，調整預算所列數額並執行之。`},{n:'78',t:`各附屬單位預算機關應行繳庫數，應依預算所列，由主管機關列入歲入分配預算依期報解。年度決算時，應按其決算及法定程序分配結果調整之，分配結果，應行繳庫數超過預算者，一律解庫。`},{n:'79',t:`各機關因左列情形之一，得請求提出追加歲出預算︰
+
+一、依法律增加業務或事業致增加經費時。
+
+二、依法律增設新機關時。
+
+三、所辦事業因重大事故經費超過法定預算時。
+
+四、依有關法律應補列追加預算者。`},{n:'80',t:`前條各款追加歲出預算之經費，應由中央財政主管機關籌劃財源平衡之。`},{n:'81',t:`法定歲入有特別短收之情勢，不能依第七十一條規定辦理時，應由中央財政主管機關籌劃抵補，並由行政院提出追加、追減預算調整之。`},{n:'82',t:`追加預算之編造、審議及執行程序，均準用本法關於總預算之規定。`},{n:'83',t:`有左列情事之一時，行政院得於年度總預算外，提出特別預算︰
+
+一、國防緊急設施或戰爭。
+
+二、國家經濟重大變故。
+
+三、重大災變。
+
+四、不定期或數年一次之重大政事。`},{n:'84',t:`特別預算之審議程序，準用本法關於總預算之規定。但合於前條第一款至第三款者，為因應情勢之緊急需要，得先支付其一部。`},{n:'85',t:`附屬單位預算中，營業基金預算之擬編，依左列規定辦理︰
+
+一、各國營事業主管機關遵照施政方針，並依照行政院核定之事業計畫總綱及預算編製辦法，擬訂其主管範圍內之事業計畫，並分別指示所屬各事業擬訂業務計畫；根據業務計畫，擬編預算。
+
+二、營業基金預算之主要內容如左︰
+
+（一）營業收支之估計。
+
+（二）固定資產之建設、改良、擴充與其資金來源及其投資計畫之成本與效益分析。
+
+（三）長期債務之舉借及償還。
+
+（四）資金之轉投資及其盈虧之估計。
+
+（五）盈虧撥補之預計。
+
+三、新創事業之預算，準用前款之規定。
+
+四、國營事業辦理移轉、停業或撤銷時，其預算應就資產負債之清理及有關之收支編列之。
+
+五、營業收支之估計，應各依其業務情形，訂定計算之標準；其應適用成本計算者，並應按產品別附具成本計算方式、單位成本、耗用人工及材料之數量與有關資料，並將變動成本與固定成本分析之。
+
+六、盈餘分配及虧損填補之項目如左︰
+
+（一）盈餘分配︰甲、填補歷年虧損。乙、提列公積。丙、分配股息紅利或繳庫盈餘。丁、其他依法律應行分配之事項。戊、未分配盈餘。
+
+（二）虧損填補︰甲、撥用未分配盈餘。乙、撥用公積。丙、折減資本。丁、出資填補。
+
+七、有關投資事項，其完成期限超過一年度者，應列明計畫內容、投資總額、執行期間及各年度之分配額；依各年度之分配額，編列各該年度預算。
+
+國營事業辦理移轉、停業，應依預算程序辦理。`},{n:'86',t:`附屬單位預算應編入總預算者，在營業基金為盈餘之應解庫額及虧損之由庫撥補額與資本由庫增撥或收回額；在其他特種基金，為由庫撥補額或應繳庫額。
+
+各附屬單位預算機關辦理以前年度依法定程序所提列之公積轉帳增資時，以立法院通過之當年度各該附屬單位預算所列數額為準，不受前項應編入總預算之限制。`},{n:'87',t:`各編製營業基金預算之機關，應依其業務情形及第七十六條之規定編造分期實施計畫及收支估計表，其配合業務增減需要隨同調整之收支，併入決算辦理。
+
+前項分期實施計畫及收支估計表，應報由各該主管機關核定執行，並轉送中央主計機關、審計機關及中央財政主管機關備查。`},{n:'88',t:`附屬單位預算之執行，如因經營環境發生重大變遷或正常業務之確實需要，報經行政院核准者，得先行辦理，並得不受第二十五條至第二十七條之限制。但其中有關固定資產之建設、改良、擴充及資金之轉投資、資產之變賣及長期債務之舉借、償還，仍應補辦預算。每筆數額營業基金三億元以上，其他基金一億元以上者，應送立法院備查；但依第五十四條辦理及因應緊急災害動支者，不在此限。
+
+公務機關因其業務附帶有事業或營業行為之作業者，該項預算之執行，準用前項之規定。
+
+第一項所稱之附屬單位預算之正常業務，係指附屬單位經常性業務範圍。`},{n:'89',t:`附屬單位預算中，營業基金以外其他特種基金預算應編入總預算者，為由庫撥補額或應繳庫額，但其作業賸餘或公積撥充基金額，不在此限，其預算之編製、審議及執行，除信託基金依其所定條件外，凡為餘絀及成本計算者，準用營業基金之規定。`},{n:'90',t:`附屬單位預算之編製、審議及執行，本章未規定者，準用本法其他各章之有關規定。`},{n:'91',t:`立法委員所提法律案大幅增加歲出或減少歲入者，應先徵詢行政院之意見，指明彌補資金之來源；必要時，並應同時提案修正其他法律。`},{n:'92',t:`未依組織法令設立之機關，不得編列預算。`},{n:'93',t:`司法院得獨立編列司法概算。
+
+行政院就司法院所提之年度司法概算，得加註意見，編入中央政府總預算案，併送立法院審議。
+
+司法院院長認為必要時，得請求列席立法院司法及法制委員會會議。`},{n:'94',t:`配額、頻率及其他限量或定額特許執照之授與，除法律另有規定外，應依公開拍賣或招標之方式為之，其收入歸屬於國庫。`},{n:'95',t:`監察委員、主計官、審計官、檢察官就預算事件，得為機關或附屬單位起訴、上訴或參加其訴訟。`},{n:'96',t:`地方政府預算，另以法律定之。
+
+前項法律未制定前，準用本法之規定。`},{n:'97',t:`預算科目名稱應顯示其事項之性質。歲入來源別科目之名稱及其分類，依財政收支劃分法之規定；歲出政事別、計畫或業務別與用途別科目之名稱及其分類，由中央主計機關定之。`},{n:'98',t:`預算書表格式，由中央主計機關定之。`},{n:'99',t:`本法修正施行後，因新舊會計年度之銜接，行政院應編製一次一年六個月之預算，以資調整。`},{n:'100',t:`本法自公布日施行。
+
+本法修正條文施行日期，由行政院於修正條文公布後兩個會計年度內定之。`},],
+'決算法':[{n:'1',t:`中華民國中央政府決算，依本法之規定辦理。`},{n:'2',t:`決算，以終結政府每一會計年度收支之帳目，並評核政府施政績效為目的。`},{n:'3',t:`各機關會計年度終了時，應依中央主計機關之規定，編造各該年度之決算。`},{n:'4',t:`各機關單位會計年度終了，依前條規定編造之決算，稱單位決算；主管機關就所屬各機關及本機關合編之決算，稱單位決算之彙編；中央主計機關彙集中央各主管機關決算及中央政府直屬機關決算而成者，稱總決算；附屬單位決算，各依其組成份子合編之決算，稱附屬單位決算之彙編。`},{n:'5',t:`政府決算，應按預算科目分別列入。`},{n:'6',t:`各機關於年度終了時，依照中央主計機關之規定，辦理年度結束之事務，按月份或預定期間，切實結轉或結算，不得延誤。`},{n:'7',t:`年度終了後，各機關應以當年度預算為基礎，依照會計法及其他有關法規，編造收支結算及結存之清冊，呈報主管機關，並分送審計機關及中央主計機關。`},{n:'8',t:`各主管機關按照前條規定，彙核各機關決算，加具意見，於會計年度結束後三個月內連同總決算所需之資料，報由中央主計機關審核。`},{n:'9',t:`中央主計機關依照各主管機關及各附屬單位會計機構之彙報決算，並以國庫及其他有關機關之報告為參證，加以核對整理，編成中央政府總決算及附屬單位決算之彙編，並以前一年度決算額及本年度預算額為比較，提出總決算審核報告書，由行政院提出於監察院。`},{n:'11',t:`中央政府總預算及特別預算之決算，由行政院提出於監察院，並附送最終審定數額表及前三條所列之有關文件；各附屬單位決算及其彙編，由各該主管機關提出於監察院。`},{n:'12',t:`前條各決算，應於會計年度結束後九個月內，提出於監察院。但特別決算不在此限。`},{n:'14',t:`審計部對於提出之各決算，加以審核，並對決算有關事項進行調查研究，於行政院提出之日起算一年內完成其審核，編造最終審定數額表，並提出決算審核報告於立法院。`},{n:'15',t:`立法院對於審計部提出之決算審核報告，委員會得審查並提出決議，移送行政院及有關機關為必要之處理；有關機關處理後，應向立法院提出報告。`},{n:'16',t:`依前條所定之決議，各有關機關應確實執行。`},{n:'17',t:`前條有關機關執行立法院之決議，有切實執行或處置之義務；如因事實上或法律上之限制，未能照案執行者，須即報告立法院。`},{n:'18',t:`依審計法或其他法律應由監察院或審計部處置者，不受前條及第十五條之限制。`},{n:'19',t:`決算之審核，應注重下列事項：
+
+一、歲入、歲出是否與預算相符，如不相符，其不符之原因。
+
+二、歲入、歲出是否平衡，如不平衡，其不平衡之原因。
+
+三、歲入、歲出是否符合預算法第二十三條之規定，如不符合，其不符合之原因。
+
+四、經費之支出，是否與設施之績效相符，如不相符，其不相符之原因。
+
+五、各方面之計畫與事業，是否已依預算予以適當之執行，如未適當執行，其未適當執行之原因。`},{n:'20',t:`各機關相互間之過帳，應各自根據其所收之轉帳通知，分別在歲入或歲出中列帳，並記明對方帳目，且其等差，應有正當理由，使各帳目彙計為符。`},{n:'21',t:`對於政府所有各財務事件，依照會計法及其他有關法規應列計於決算者，均應列入。`},{n:'22',t:`各機關之決算，並應附列下列各表：
+
+一、歲入比較表（實收數與預算數及上年度決算數之比較），附說明。
+
+二、歲出比較表（實支數與預算數及上年度決算數之比較），附說明。
+
+三、歲入、歲出餘絀，各類債務舉借及償還，移用以前年度歲計賸餘及各種特殊撥付、挪用情形，附說明。
+
+四、資產、負債及淨資產之比較，附說明。
+
+五、各機關已收未支及其保留數之說明。`},{n:'23',t:`各主管機關彙編決算，應附送其所主管預算及基金運用情形之說明，及各附屬機關、事業機構之主要業績及其考核情形說明。`},{n:'24',t:`中央政府總決算，除第二十二條各表外，並應附列下列各表：
+
+一、歲入類別比較表（實收數、預算數及上年度決算數之比較），附說明。
+
+二、歲出政事及計畫別比較表（實支數、預算數及上年度決算數之比較），附說明。
+
+三、未償債務之說明。
+
+四、以前年度應收、應付款之清理情形。`},{n:'25',t:`前條各表，並應附載下列事項：
+
+一、施政績效之評核。
+
+二、非常損失或收益之說明。
+
+三、為增加收入或節省支出之建議事項。`},{n:'26',t:`每一會計年度終了時，設在各地方之各機關，應依照規定，就其年度之歲入、歲出及結存，辦理年度終了結轉事項，並送報告於其主管機關及中央主計機關。`},{n:'26-1',t:`各主管機關彙編附屬單位決算時，應附送政府捐助基金累計超過百分之五十之財團法人，及日本撤退臺灣接收其所遺留財產而成立之財團法人本年度之業務報告、決算書及盈虧撥補情形，各該主管機關對其業務、財務之監督及考核情形，及其所設置基金之運用情形。`},{n:'27',t:`附屬單位決算，在營業基金者，應編列下列各表：
+
+一、業務報告。
+
+二、收支餘絀表。
+
+三、資產負債表。
+
+四、現金流量表。
+
+五、盈虧撥補表。
+
+六、資本計畫執行情形表。
+
+七、長期債務清償情形表。
+
+八、投資事業決算表。
+
+附屬單位決算，在其他特種基金者，除信託基金依其所定條件辦理外，準用前項規定；其無盈虧者，毋庸編列盈虧撥補表。`},{n:'28',t:`決算書格式，由中央主計機關定之。`},{n:'29',t:`各機關依法律規定，在年度進行中所發生之中途移轉、停業、裁撤或合併者，應辦理特別決算，其辦法由中央主計機關定之。`},{n:'30',t:`本法自公布日施行。`},],
+'審計法':[{n:'1',t:`政府及其所屬機關財務之審計，依本法之規定。`},{n:'2',t:`審計職權如左：
+
+一、監督預算之執行。
+
+二、核定收支命令。
+
+三、審核財務收支，審定決算。
+
+四、稽察財物及財政上之不法或不忠於職務之行為。
+
+五、考核財務效能。
+
+六、核定財務責任。
+
+七、其他依法律應行辦理之審計事項。`},{n:'3',t:`審計職權，由審計機關行使之。`},{n:'4',t:`中央各機關及其所屬機關財務之審計，由審計部辦理；其在各省（市）地方者，得指定就近審計處（室）辦理之。`},{n:'5',t:`各省（市）政府及其所屬機關財務之審計，由各該省（市）審計處辦理之；各縣（市）政府及其所屬機關財務之審計，由各該縣（市）酌設審計室辦理之。`},{n:'6',t:`特種公務機關、公有營業機關、公有事業機關財務之審計，由各該組織範圍審計處（室）辦理之。`},{n:'7',t:`未設審計處（室）者，其財務之審計，由各該管審計機關辦理，或指定就近審計處（室）兼理之。`},{n:'8',t:`審計機關對於審計事務，為辦理之便利，得委託其他審計機關辦理，其決定應通知原委託機關。`},{n:'9',t:`審計機關對於審計上涉及特殊技術及監視、鑑定等事項，得諮詢其他機關、團體或專門技術人員，或委託辦理，其結果仍由原委託之審計機關決定之。`},{n:'10',t:`審計人員依法獨立行使其審計職權，不受干涉。`},{n:'11',t:`審計機關處理重要審計案件，在部以審計會議，在處（室）以審核會議決議行之。
+
+前項會議規則，由審計部定之。`},{n:'12',t:`審計機關應經常或臨時派員赴各機關就地辦理審計事務；其未就地辦理者，得通知其送審，並得派員抽查之。`},{n:'13',t:`審計機關對於各機關一切收支及財物，得隨時稽察之。`},{n:'14',t:`審計人員為行使職權，向各機關查閱簿籍、憑證或其他文件，或檢查現金、財物時，各該主管人員不得隱匿或拒絕；遇有疑問，或需要有關資料，並應為詳實之答復或提供之。
+
+如有違背前項規定，審計人員應將其事實報告該管審計機關，通知各該機關長官予以處分，或呈請監察院核辦。`},{n:'15',t:`審計機關為行使職權，得派員持審計部稽察證，向有關之公私團體或個人查詢，或調閱簿籍、憑證或其他文件，各該負責人不得隱匿或拒絕；遇有疑問，並應為詳實之答復。
+
+行使前項職權，必要時，得知照司法或警憲機關協助。`},{n:'16',t:`審計機關或審計人員行使前二條之職權，對於詢問事項，得作成筆錄，由受詢人簽名或蓋章；必要時，得臨時封鎖各項有關簿籍、憑證或其他文件，並得提取全部或一部。`},{n:'17',t:`審計人員發覺各機關人員有財務上不法或不忠於職務上之行為，應報告該管審計機關，通知各該機關長官處分之，並得由審計機關報請監察院依法處理；其涉及刑事者，應移送法院辦理，並報告於監察院。`},{n:'18',t:`審計人員對於前條情事，認為有緊急處分之必要，應立即報告該管審計機關，通知該機關長官從速執行之。
+
+該機關長官接到前項通知，不為緊急處分時，應連帶負責。`},{n:'19',t:`第十四條第二項、第十七條、第十八條及第七十八條所舉情事，應負責者為機關長官時，審計機關應通知其上級機關執行處分。`},{n:'20',t:`對於審計機關通知處分之案件，各機關有延壓或處分不當情事，審計機關應查詢之，各機關應為負責之答復。
+
+審計機關對各機關不負責答復，或對其答復認為不當時，得由審計部呈請監察院核辦。`},{n:'21',t:`審計機關或審計人員，對於各機關違背預算或有關法令之不當支出，得事前拒簽或事後剔除追繳之。`},{n:'22',t:`審計機關處理審計案件，應將審計結果，分別發給核准通知或審核通知於被審核機關。`},{n:'23',t:`各機關接得審計機關之審核通知，除決算之審核依決算法規定外，應於接到通知之日起三十日內聲復，由審計機關予以決定；其逾限者，審計機關得逕行決定。`},{n:'24',t:`各機關對於審計機關前條之決定不服時，除決算之審定依決算法之規定辦理外，得自接到通知之日起三十日內，聲請覆議；其逾期者，審計機關不予覆議。
+
+聲請覆議，以一次為限。`},{n:'25',t:`各機關對於審計機關逕行決定案件之聲請覆議或審核通知之聲復，因特別事故未能依照前二條所定期限辦理時，得於限內聲敘事實，請予展期。
+
+前項展期，由審計機關定之，並以一次為限。`},{n:'26',t:`審計機關對於重大審計案件之審查，必要時得通知被審核機關派員說明，並答復詢問。`},{n:'27',t:`審計機關對於審查完竣案件，自決定之日起二年內發現其中有錯誤、遺漏、重複等情事，得為再審查；若發現詐偽之證據，十年內仍得為再審查。`},{n:'28',t:`審計機關因前條為再審查之結果，如變更原決定者，其已發之核准通知及審定書，失其效力，並應限期繳銷。`},{n:'29',t:`審計機關如因被審核機關之負責人員之行蹤不明，致案件無法清結時，除通知其主管機關負責查追外，得摘要公告，並將負責人員姓名通知銓敘機關；在未清結前，停止敘用。`},{n:'30',t:`各機關有關財務之組織，由審計機關派員參加者，其決議事項，審計機關不受拘束。但以審計機關參加人對該決議曾表示異議者為限。`},{n:'31',t:`各機關會計制度及有關內部審核規章，應會商該管審計機關後始得核定施行，變更時亦同；其有另行訂定業務檢核或績效考核辦法者，應通知審計機關。`},{n:'32',t:`各機關長官或其授權代簽人及主辦會計人員，簽證各項支出，對於審計有關法令，遇有疑義或爭執時，得以書面向該管審計機關諮詢，審計機關應解釋之。
+
+前項解釋，得公告之。`},{n:'33',t:`政府發行債券或借款，應由主管機關將發行條例或借款契約等送該管審計機關備查；如有變更，應隨時通知審計機關。`},{n:'34',t:`政府於會計年度結束後，應編製總決算，送審計機關審核。
+
+中央政府年度總決算，應由審計部於行政院提出後三個月內完成其審核，並提出審核報告於立法院。
+
+立法院、監察院或兩院中之各委員會，審議前項報告，如有諮詢或需要有關審核之資料，審計長應答復或提供之。
+
+地方政府年度總決算之編送及審核，準用前列各項規定。`},{n:'35',t:`各機關已核定之分配預算，連同施政計畫及其實施計畫，應依限送審計機關；變更時亦同。
+
+前項分配預算，如與法定預算或有關法令不符者，應糾正之。`},{n:'36',t:`各機關或各種基金，應依會計法及會計制度之規定，編製會計報告連同相關資訊檔案，依限送該管審計機關審核；審計機關並得通知其檢送原始憑證或有關資料。`},{n:'37',t:`審計機關對於公庫及各地區支付機構經管事務，得隨時派員抽查。`},{n:'40',t:`審計機關派員赴徵收機關辦理賦稅捐費審計事務，如發現有計算錯誤或違法情事，得通知該管機關查明，依法處理。`},{n:'41',t:`審計機關派員赴各機關就地辦理審計事務，應評核其相關內部控制建立及執行之有效程度，決定其審核之詳簡範圍。`},{n:'42',t:`審計人員就地辦理各機關審計事務時，得通知該機關，將各項報表送審計人員查核；該審計人員對其簿籍得隨時檢查，並與有關憑證及現金、財物等核對。`},{n:'43',t:`審計人員就地辦理各機關審計事務，應將審核結果，報由該管審計機關核定之。`},{n:'45',t:`各機關於會計年度結束後，應編製年度決算，送審計機關審核；審計機關審定後，應發給審定書。`},{n:'46',t:`各機關應送之會計報告，不依規定期限送審者，審計機關應予催告；經催告後，仍不送審者，得依第十七條規定辦理。`},{n:'47',t:`應經審計機關審核之公有營業及事業機關如左：
+
+一、政府獨資經營者。
+
+二、政府與人民合資經營，政府資本超過百分之五十者。
+
+三、由前二款公有營業及事業機關轉投資於其他事業，其轉投資之資本額超過該事業資本百分之五十者。`},{n:'48',t:`公有營業及事業機關財務之審計，除依本法及有關法令規定辦理外，並得適用一般企業審計之原則。`},{n:'49',t:`公有營業及事業機關之營業或事業計畫及預算，暨分期實施計畫、收支估計表、會計月報，應送審計機關。`},{n:'50',t:`公有營業及事業機關應編製結算表、年度決算表，送審計機關審核。`},{n:'51',t:`公有營業及事業之盈虧，以審計機關審定數為準。`},{n:'52',t:`公有營業及事業盈虧撥補，應依法定程序辦理；其不依規定者，審計機關應修正之。`},{n:'53',t:`公有營業及事業機關，依照法令規定，為固定資產之重估價時，應將有關紀錄，送審計機關審核。`},{n:'54',t:`公有營業及事業審計，並適用第四十一條至第四十三條、第四十五條及第四十六條之規定。`},{n:'55',t:`審計機關對於各機關之現金、票據、證券及其他一切財物之管理、運用及其有關事項，得調查之；認為不當者，得隨時提出意見於各該機關。`},{n:'56',t:`各機關對於所經管之不動產、物品或其他財產之增減、保管、移轉、處理等事務，應按會計法及其他有關法令之規定，編製有關財物會計報告，依限送審計機關審核；審計機關並得派員查核。`},{n:'57',t:`各機關對於所經管之財物，依照規定使用年限，已達報廢程度時，必須報廢，其在一定金額以上者，應報審計機關查核；在一定金額以上不能利用之廢品，及已屆保管年限之會計憑證、簿籍、報表等，依照法令規定可予銷燬時，應徵得審計機關同意後為之。`},{n:'58',t:`各機關經管現金、票據、證券、財物或其他資產，如有遺失、毀損，或因其他意外事故而致損失者，應檢同有關證件，報審計機關審核。`},{n:'59',t:`審計機關對於各機關採購之規劃、設計、招標、履約、驗收及其他相關作業，得隨時稽察之；發現有不合法定程序，或與契約、章則不符，或有不當者，應通知有關機關處理。
+
+各機關對於審計機關之稽察，應提供有關資料。`},{n:'60',t:`各機關營繕工程及定製財物，其價格之議訂，係根據特定條件，按所需實際成本加利潤計算者，應於合約內訂明；審計機關得派員就承攬廠商實際成本之有關帳目，加以查核，並將結果通知主辦機關。`},{n:'61',t:`經管債券機關，於債券抽籤還本及銷燬時，應通知審計機關。`},{n:'62',t:`各主管機關應將逐級考核各機關按月或分期實施計畫之完成進度、收入，與經費之實際收支狀況，隨時通知審計機關。`},{n:'63',t:`公務機關編送會計報告及年度決算時，應就計畫及預算執行情形，附送績效報告於審計機關；其有工作衡量單位者，應附送成本分析之報告，並說明之。`},{n:'64',t:`各公有營業及事業機關編送結算表及年度決算表時，應附業務報告；其適用成本會計者，應附成本分析報告，並說明之。`},{n:'65',t:`審計機關辦理公務機關審計事務，應注意左列事項：
+
+一、業務、財務、會計、事務之處理程序及其有關法令。
+
+二、各項計畫實施進度、收支預算執行經過及其績效。
+
+三、財產運用有效程度及現金、財物之盤查。
+
+四、應收、應付帳款及其他資產、負債之查證核對。
+
+五、以上各款應行改進事項。`},{n:'66',t:`審計機關辦理公有營業及事業機關審計事務，除依前條有關規定辦理外，並應注意左列事項：
+
+一、資產、負債及損益計算之翔實。
+
+二、資金之來源及運用。
+
+三、重大建設事業之興建效能。
+
+四、各項成本、費用及營業收支增減之原因。
+
+五、營業盛衰之趨勢。
+
+六、財務狀況及經營效能。`},{n:'67',t:`審計機關審核各機關或各基金決算，應注意左列事項：
+
+一、違法失職或不當情事之有無。
+
+二、預算數之超過或賸餘。
+
+三、施政計畫、事業計畫或營業計畫已成與未成之程度。
+
+四、經濟與不經濟之程度。
+
+五、施政效能、事業效能、或營業效能之程度及與同類機關或基金之比較。
+
+六、其他與決算有關事項。`},{n:'68',t:`審計機關審核中央政府總決算，應注意左列事項：
+
+一、歲入、歲出是否與預算相符；如不相符，其不符之原因。
+
+二、歲入、歲出是否平衡；如不平衡，其不平衡之原因。
+
+三、歲入、歲出是否與國民經濟能力及其發展相適應。
+
+四、歲入、歲出是否與國家施政方針相適應。
+
+五、各方所擬關於歲入、歲出應行改善之意見。
+
+前項所列應行注意事項，於審核地方政府總決算準用之。`},{n:'69',t:`審計機關考核各機關之績效，如認為有未盡職責或效能過低者，除通知其上級機關長官外，並應報告監察院；其由於制度規章缺失或設施不良者，應提出建議改善意見於各該機關。
+
+前項考核，如認為有可提升效能或增進公共利益者，應提出建議意見於各該機關或有關機關。
+
+審計機關發現有影響各機關施政或營（事）業效能之潛在風險事項，得提出預警性意見於各該機關或有關機關，妥為因應。`},{n:'70',t:`審計機關於政府編擬年度概算前，應提供審核以前年度預算執行之有關資料及建議意見。`},{n:'71',t:`各機關人員對於財務上行為應負之責任，非經審計機關審查決定，不得解除。`},{n:'72',t:`第五十八條所列情事，經審計機關查明未盡善良管理人應有之注意時，該機關長官及主管人員應負損害賠償之責。`},{n:'73',t:`由數人共同經管之遺失、毀損或損失案件，不能確定其中孰為未盡善良管理人應有之注意或故意或重大過失時，各該經管人員應連帶負損害賠償責任；造意人視為共同行為人。`},{n:'74',t:`經審計機關決定應剔除或繳還之款項，其未能依限悉數追還時，如查明該機關長官或其授權代簽人及主辦會計人員，對於簽證該項支出有故意或過失者，應連帶負損害賠償責任。`},{n:'75',t:`各機關主辦及經辦出納人員簽發支票或給付現金，如查明有超過核准人員核准數額，或誤付債權人者，應負損害賠償責任。
+
+支票之經主辦會計人員及主管長官或其授權代簽人核簽者，如前項人員未能依限悉數賠償時，應連帶負損害賠償責任。
+
+公庫地區支付機構簽發公庫支票，準用前二項規定。`},{n:'76',t:`審計機關審核各機關會計簿籍或報告，如發現所載事項與原始憑證不符，致使公款遭受損害者，該主辦及經辦會計人員應負損害賠償責任。`},{n:'77',t:`審計機關對於各機關剔除、繳還或賠償之款項或不當事項，如經查明覆議或再審查，有左列情事之一者，得審酌其情節，免除各該負責人員一部或全部之損害賠償責任，或予以糾正之處置：
+
+一、非由於故意、重大過失或舞弊之情事，經查明屬實者。
+
+二、支出之結果，經查確實獲得相當價值之財物，或顯然可計算之利益者。`},{n:'78',t:`審計機關決定剔除、繳還或賠償之案件，應通知該負責機關之長官限期追繳，並通知公庫、公有營業或公有事業主管機關；逾期，該負責機關長官應即移送法院強制執行；追繳後，應報告審計機關查核。
+
+前項負責機關之長官，違反前項規定，延誤追繳，致公款遭受損失者，應負損害賠償之責，由公庫、公有營業或公有事業主管機關，依法訴追，並報告審計機關查核。`},{n:'79',t:`審計機關對於公私合營之事業，及受公款補助之私人團體應行審計事務，得參照本法之規定執行之。`},{n:'80',t:`關於審計之各種章則及書表格式，由審計部定之。`},{n:'81',t:`本法施行細則，由審計部擬訂，呈請監察院核定之。`},{n:'82',t:`本法自公布日施行。
+
+本法修正條文第五十九條施行日期，由審計部定之。`},],
+'會計法':[{n:'1',t:`政府及其所屬機關辦理各項會計事務，依本法之規定。`},{n:'2',t:`各下級政府主計機關（無主計機關者，其最高主計人員），關於會計事務，應受該管上級政府主計機關之監督與指導。`},{n:'3',t:`政府及其所屬機關，對於左列事項，應依機關別與基金別為詳確之會計：
+
+一、預算之成立、分配、執行。
+
+二、歲入之徵課或收入。
+
+三、債權、債務之發生、處理、清償。
+
+四、現金、票據、證券之出納、保管、移轉。
+
+五、不動產物品及其他財產之增減、保管、移轉。
+
+六、政事費用、事業成本及歲計餘絀之計算。
+
+七、營業成本與損益之計算及歲計盈虧之處理。
+
+八、其他應為會計之事項。`},{n:'4',t:`前條會計事項之事務，依其性質，分下列四類：
+
+一、普通公務之會計事務：謂公務機關一般之會計事務。
+
+二、特種公務之會計事務：謂特種公務機關除前款之會計事務外，所辦之會計事務。
+
+三、公營事業之會計事務：謂公營事業機關之會計事務。
+
+四、非常事件之會計事務：謂有非常性質之事件，及其他不隨會計年度開始與終了之重大事件，其主辦機關或臨時組織對於處理該事件之會計事務。`},{n:'5',t:`普通公務之會計事務，為左列三種：
+
+一、公務歲計之會計事務：謂公務機關之歲入或經費之預算實施，及其實施時之收支，與因處理收支而發生之債權、債務，及計算政事費用與歲計餘絀之會計事務。
+
+二、公務出納之會計事務：謂公務機關之現金、票據、證券之出納、保管、移轉之會計事務。
+
+三、公務財物之會計事務：謂公務機關之不動產物品及其他財產之增減、保管、移轉之會計事務。`},{n:'6',t:`特種公務之會計事務，為左列六種：
+
+一、公庫出納之會計事務：謂公庫關於現金、票據、證券之出納、保管、移轉之會計事務。
+
+二、財物經理之會計事務：謂公有財物經理機關，關於所經理不動產物品及其他財產之增減、保管、移轉之會計事務。
+
+三、徵課之會計事務：謂徵收機關，關於稅賦捐費等收入之徵課、查定，及其他依法處理之程序，與所用之票照等憑證，及其處理徵課物之會計事務。
+
+四、公債之會計事務：謂公債主管機關，關於公債之發生、處理、清償之會計事務。
+
+五、特種財物之會計事務：謂特種財物之管理機關，關於所管財務處理之會計事務。
+
+六、特種基金之會計事務：謂特種基金之管理機關，關於所管基金處理之會計事務。
+
+前項第六款稱特種基金者：謂除營業基金、公債基金及另為事業會計之事業基金外，各種信託基金、留本基金、非營業之循環基金等，不屬於普通基金之各種基金。`},{n:'7',t:`公營事業之會計事務，為下列四種：
+
+一、營業歲計之會計事務：謂營業預算之實施，及其實施之收支，與因處理收支而發生之債權、債務，及計算歲計盈虧與營業損益之會計事務。
+
+二、營業成本之會計事務：謂計算營業之出品或勞務每單位所費成本之會計事務。
+
+三、營業出納之會計事務：謂營業上之現金、票據、證券之出納、保管、移轉之會計事務。
+
+四、營業財物之會計事務：謂營業上使用及運用之財產增減、保管、移轉之會計事務。`},{n:'8',t:`各機關對於所有前三條之會計事務，均應分別種類，綜合彙編，作為統制會計。`},{n:'9',t:`政府會計之組織為左列五種：
+
+一、總會計。
+
+二、單位會計。
+
+三、分會計。
+
+四、附屬單位會計。
+
+五、附屬單位會計之分會計。
+
+前項各款會計，均應用複式簿記。但第三款、第五款分會計之事務簡單者，不在此限。
+
+第一項各款會計之帳務處理，得視事實需要，呈請上級主計機關核准後，集中辦理。`},{n:'10',t:`中央、直轄市、縣（市）、鄉（鎮、市）、直轄市山地原住民區之會計，各為一總會計。`},{n:'11',t:`左列各款會計，為單位會計：
+
+一、在總預算有法定預算之機關單位之會計。
+
+二、在總預算不依機關劃分而有法定預算之特種基金之會計。`},{n:'12',t:`單位會計下之會計，除附屬單位會計外，為分會計，並冠以機關名稱。`},{n:'13',t:`左列各款會計，為附屬單位會計：
+
+一、政府或其所屬機關附屬之營業機關、事業機關或作業組織之會計。
+
+二、各機關附屬之特種基金，以歲入、歲出之一部編入總預算之會計。`},{n:'14',t:`附屬單位會計下之會計，為附屬單位會計之分會計，並冠以機關名稱。`},{n:'15',t:`會計年度之開始及終了，依預算法之所定。
+
+會計年度之分季，自年度開始之日起，每三個月為一季。
+
+會計年度之分月，依國曆之所定。
+
+各月之分旬，以一日至十日為上旬，十一日至二十日為中旬，二十一日至月之末日為下旬。
+
+各月之分為五日期間者，自一日起，每五日為一期，其最後一期為二十六日至月之末日。
+
+期間不以會計年度或國曆月份之始日起算者，或月份非連續計算者，其計算依民法第一百二十一條至第一百二十三條之所定。`},{n:'16',t:`政府會計應以國幣或預算所定之貨幣為記帳本位幣；其以不合本位幣之本國或外國貨幣記帳者，應折合本位幣記入主要之帳簿。記帳時，除為乘除計算外，至元為止，角位四捨五入。
+
+前項規定，如有特殊情形者，得擬定處理辦法，經各該政府主計機關核定施行。`},{n:'17',t:`會計制度之設計，應依會計事務之性質、業務實際情形及其將來之發展，先將所需要之會計報告決定後，據以訂定應設立之會計科目、簿籍、報表及應有之會計憑證。
+
+凡性質相同或類似之機關或基金，其會計制度應為一致之規定。政府會計基礎，除公庫出納會計外，應採用權責發生制。`},{n:'18',t:`中央總會計制度之設計、核定，由中央主計機關為之。
+
+地方政府之總會計制度及各種會計制度之一致規定，由各該政府之主計機關設計，呈經上級主計機關核定頒行。
+
+各機關之會計制度，由各該機關之會計機構設計，簽報所在機關長官後，呈請各該政府之主計機關核定頒行。
+
+前項設計，應經各關係機關及該管審計機關會商後始得核定；修正時亦同。
+
+各種會計制度之釋例，與會計事務處理之一致規定，由各該會計制度之頒行機關核定之。`},{n:'19',t:`前二條之設計，應明定左列各事項：
+
+一、各會計制度應實施之機關範圍。
+
+二、會計報告之種類及其書表格式。
+
+三、會計科目之分類及其編號。
+
+四、會計簿籍之種類及其格式。
+
+五、會計憑證之種類及其格式。
+
+六、會計事務之處理程序。
+
+七、內部審核之處理程序。
+
+八、其他應行規定之事項。`},{n:'20',t:`各會計制度，不得與本法及預算、決算、審計、國庫、統計等法牴觸；單位會計及分會計之會計制度，不得與其總會計之會計制度牴觸；附屬單位會計及其分會計之會計制度，不得與該管單位會計或分會計之會計制度牴觸。`},{n:'21',t:`各種會計報告應劃分會計年度，按左列需要，編製各種定期與不定期之報告，並得兼用統計與數理方法，為適當之分析、解釋或預測：
+
+一、對外報告，應按行政、監察、立法之需要，及人民所須明瞭之會計事實編製之。
+
+二、對內報告，應按預算執行情形、業務進度及管理控制與決策之需要編製之。`},{n:'22',t:`會計報告分左列二類：
+
+一、靜態之會計報告：表示一定日期之財務狀況。
+
+二、動態之會計報告：表示一定期間內之財務變動經過情形。
+
+前項靜態、動態報告各表，遇有比較之必要時，得分別編造比較表。`},{n:'23',t:`各單位會計及附屬單位會計之靜態與動態報告，依充分表達原則，及第五條至第七條所列之會計事務，各於其會計制度內訂定之。
+
+靜態報告應按其事實，分別編造左列各表：一、平衡表。二、現金結存表。三、票據結存表。四、證券結存表。五、票照等憑證結存表。六、徵課物結存表。七、公債現額表。八、財物或特種財物目錄。九、固定負債目錄。
+
+動態報告應按其事實，分別編造左列各表：一、歲入或經費累計表。二、現金出納表。三、票據出納表。四、證券出納表。五、票照等憑證出納表。六、徵課物出納表。七、公債發行表及公債還本付息表。八、財物或特種財物增減表。九、固定負債增減表。十、成本計算表。十一、損益計算表。十二、資金運用表。十三、盈虧撥補表。`},{n:'24',t:`非常事件所應編造之會計報告各表，由主計機關按事實之需要，參酌前條之規定分別定之。`},{n:'25',t:`各單位會計所需編製之會計報告各表，應按基金別編造之。但為簡明計，得按基金別分欄綜合編造。`},{n:'26',t:`分會計應編造之靜態與動態報告，應就其本身及其隸屬單位會計或附屬單位會計之需要，於其會計制度內訂定之。`},{n:'27',t:`第二十二條至第二十五條之報告及各表，得由各該政府主計機關，會同其單位會計機關或附屬單位會計機關之主管長官及其主辦會計人員，按事實之需要，酌量減少或合併編製之。`},{n:'28',t:`政府之總會計，應為第二十一條至第二十三條綜合之報告。但依第九條第三項集中辦理者，得就其會計紀錄產生會計報告。`},{n:'30',t:`各種會計報告表，應根據會計紀錄編造，並使便於核對。`},{n:'31',t:`非政府機關代理政府事務者，其報告與會計人員之報告發生差額時，應由會計人員加編差額解釋表。`},{n:'32',t:`各單位會計機關及各附屬單位會計機關報告之編送，應依左列期限：
+
+一、日報於次日內送出。
+
+二、五日報於期間經過後二日內送出。
+
+三、週報、旬報於期間經過後三日內送出。
+
+四、月報、季報於期間經過後十五日內送出。但法令另定期限者，依其期限。
+
+五、半年度報告於期間經過後三十日內送出；年度報告，依決算法之規定。
+
+前項第一款至第四款各報告之編送期限，於分會計及附屬單位會計之分會計適用之。
+
+第一項第五款之報告，應由單位會計或附屬單位會計機關，就其分會計機關整理後之報告彙編之；其編送期限，得按各該分會計機關呈送整理報告之期限及其郵遞實需期間加算之；採用機器處理會計資料之機關，其會計報告編送期限，由該管主計機關定之。`},{n:'33',t:`前條第一項第一款至第四款之報告，其關於各機關本身之部分，在日報應以每日辦事完畢時已入帳之會計事項；在五日報、週報、旬報、月報、季報，應以各該期間之末日辦事完畢時已入帳之會計事項，分別列入。其關於彙編所屬機關之部分，在日報，應以每日辦事完畢時已收到之所屬機關日報內之會計事項；在五日報、週報、旬報、月報、季報，應以各該期間之末日辦事完畢時已收到之所屬機關之五日報、週報或旬報、月報、季報內之會計事項，分別列入。但月報、季報之採用月結、季結制者，不在此限。`},{n:'34',t:`各種會計科目，依各種會計報告所應列入之事項定之，其名稱應顯示其事項之性質；如其科目性質與預算、決算科目相同者，其名稱應與預算、決算科目之名稱相合。`},{n:'35',t:`各種會計報告總表之會計科目，與其明細表之會計科目，應顯示其統制與隸屬之關係，總表會計科目為統制帳目，明細表會計科目為隸屬帳目。`},{n:'36',t:`為便利綜合彙編及比較計，中央政府各機關對於事項相同或性質相同之會計科目，應使其一致，對於互有關係之會計科目，應使之相合。
+
+地方政府對於與中央政府事項相同或性質相同之會計科目，應依中央政府之所定；對於互有關係之會計科目，應使合於中央政府之所定。`},{n:'37',t:`各種會計科目之訂定，應兼用收付實現事項及權責發生事項，為編定之對象。`},{n:'38',t:`各種會計科目，應依所列入之報告，並各按其科目之性質，分類編號。`},{n:'39',t:`會計科目名稱經規定後，非經各該政府主計機關或其負責主計人員之核定，不得變更。
+
+前項變更會計科目之核定，應通知該管審計機關。`},{n:'40',t:`會計簿籍分左列二類：
+
+一、帳簿：謂簿籍之紀錄，為供給編造會計報告事實所必需者。
+
+二、備查簿：謂簿籍之紀錄，不為編造會計報告事實所必需，而僅為便利會計事項之查考，或會計事務之處理者。
+
+會計資料採用機器處理者，其機器貯存體中之紀錄，視為會計簿籍。
+
+前項機器貯存體中之紀錄，應於處理完畢時，附置總數控制數碼，並另以書面標示，由主辦會計人員審核簽名或蓋章。`},{n:'41',t:`帳簿分左列二類：
+
+一、序時帳簿：謂以事項發生之時序為主而為紀錄者，其個別名稱謂之簿。
+
+二、分類帳簿：謂以事項歸屬之會計科目為主而為紀錄者，其個別名稱謂之帳。`},{n:'42',t:`序時帳簿及分類帳簿，均得就事實上之需要及便利，設立專欄。`},{n:'43',t:`序時帳簿分左列二種：
+
+一、普通序時帳簿：謂對於一切事項為序時登記，或並對於第二款帳項之結數為序時登記而設者，如分錄日記帳簿。
+
+二、特種序時帳簿：謂對於特種事項為序時登記而設者，如歲入收支登記簿、經費收支登記簿、現金出納登記簿及其他關於特種事項之登記簿。`},{n:'44',t:`分類帳簿分左列二種：
+
+一、總分類帳簿：謂對於一切事項為總括之分類登記，以編造會計報告總表為主要目的而設者。
+
+二、明細分類帳簿：謂對於特種事項為明細分類或分戶之登記，以編造會計報告明細表為主要目的而設者，如歲入明細帳簿、經費明細帳簿、財物明細帳簿及其他有關於特種事項之明細帳簿。
+
+設有明細分類帳簿者，總分類帳簿內應設統制帳目，登記各該明細分類帳之總數。但財物明細分類帳簿，除依第二十九條應列入平衡表者外，應另設統制帳簿。`},{n:'45',t:`政府主計機關，對於總會計、單位會計、附屬單位會計及分會計之特種序時帳簿及明細分類帳簿，為求簡便計，得酌量合併編製。`},{n:'46',t:`關於各單位會計或附屬單位會計之帳簿，除應設置普通序時帳簿及總分類帳簿外，其特種序時帳簿及明細分類帳簿，應由各該政府主計機關，會同單位會計或附屬單位會計機關或基金之主管長官及主辦會計人員，按事實之需要，酌量設置之。
+
+各單位會計或附屬單位會計之備查簿，除主計機關認為應設置者外，各機關或基金主管長官及主辦會計人員，亦得按其需要情形，自行設置之。`},{n:'47',t:`各分會計之會計事務較繁者，其帳簿之種類，準用關於單位會計或附屬單位會計之規定；其會計事務較簡者，得僅設序時帳簿及其必需之備查簿。`},{n:'48',t:`各分會計機關，應就其序時帳簿之內容，按時抄送主管之單位會計機關或附屬單位會計機關列帳；其會計事務較繁者，得由主管之單位會計機關或附屬單位會計機關，商承各該政府主計機關及該管審計機關，使僅就其每期各科目之借方、貸方各項總數，抄送主管之單位會計機關或附屬單位會計機關列帳。`},{n:'49',t:`總會計之帳簿，應就其彙編會計總報告所需之記載設置之；其備查簿就其處理事務上之需要設置之。`},{n:'50',t:`管理特種財物機關，關於所管珍貴動產，應備索引、照相、圖樣及其他便於查對之暗記紀錄等備查簿；關於所管不動產，應備地圖、圖樣等備查簿；其程式由各該政府之主計機關定之。`},{n:'51',t:`會計憑證分左列二類：
+
+一、原始憑證：謂證明事項經過而為造具記帳憑證所根據之憑證。
+
+二、記帳憑證：謂證明處理會計事項人員責任，而為記帳所根據之憑證。`},{n:'52',t:`原始憑證為左列各種：
+
+一、預算書表及預算準備金依法支用與預算科目間經費依法流用之核准命令。
+
+二、現金、票據、證券之收付及移轉等書據。
+
+三、薪俸、工餉、津貼、旅費、卹養金等支給之表單及收據。
+
+四、財物之購置、修繕；郵電、運輸、印刷、消耗等各項開支發票及收據。
+
+五、財物之請領、供給、移轉、處置及保管等單據。
+
+六、買賣、貸借、承攬等契約及其相關之單據。
+
+七、存匯、兌換及投資等證明單據。
+
+八、歸公財物、沒收財物、贈與或遺贈之財物目錄及證明書類。
+
+九、稅賦捐費等之徵課、查定，或其他依法處理之書據、票照之領發，及徵課物處理之書據。
+
+十、罰款、賠款經過之書據。
+
+十一、公債發行之法令、還本付息之本息票及處理申溢折扣之計算書表。
+
+十二、成本計算之單據。
+
+十三、盈虧處理之書據。
+
+十四、會計報告書表。
+
+十五、其他可資證明第三條各款事項發生經過之單據或其他書類。
+
+前項各種憑證之附屬書類，視為各該憑證之一部。`},{n:'53',t:`記帳憑證為左列三種：
+
+一、收入傳票。
+
+二、支出傳票。
+
+三、轉帳傳票。
+
+前項各種傳票，應以顏色或其他方法區別之。`},{n:'54',t:`各種傳票應為左列各款之記載：
+
+一、年、月、日。
+
+二、會計科目。
+
+三、事由。
+
+四、本位幣數目，不以本位幣計數者，其貨幣之種類、數目及折合率。
+
+五、有關之原始憑證種類、張數及其號數、日期。
+
+六、傳票號數。
+
+七、其他備查要點。`},{n:'55',t:`各種傳票，非經左列各款人員簽名或蓋章不生效力。但實際上無某款人員者缺之：
+
+一、機關長官或其授權代簽人。
+
+二、業務之主管或主辦人員。
+
+三、主辦會計人員或其授權代簽人。
+
+四、關係現金、票據、證券出納保管移轉之事項時，主辦出納事務人員。
+
+五、關係財物增減、保管、移轉之事項時，主辦經理事務人員。
+
+六、製票員。
+
+七、登記員。
+
+前項第一款、第二款、第五款人員，已於原始憑證上為負責之表示者，傳票上得不簽名或蓋章。`},{n:'56',t:`原始憑證，其格式合於記帳憑證之需要者，得用作記帳憑證，免製傳票。`},{n:'57',t:`各分會計機關之事務簡單者，其原始憑證經機關長官及主辦會計人員簽名或蓋章後，得用作記帳憑證，免製傳票。`},{n:'58',t:`會計人員非根據合法之原始憑證，不得造具記帳憑證；非根據合法之記帳憑證，不得記帳。但整理結算及結算後轉入帳目等事項無原始憑證者，不在此限。`},{n:'59',t:`大宗財物之增減、保管、移轉，應隨時造具記帳憑證。但零星消費品、材料品之付出，得每月分類彙總造具記帳憑證。`},{n:'60',t:`公營事業有永久性財物之折舊，與無永久性財物之盤存消耗，應以成本為標準；其成本無可稽考者，以初次入帳時之估價為標準。`},{n:'61',t:`成本會計事務，對於成本要素，應為詳備之紀錄及精密之計算，分別編造明細報告表，並比較分析其增減原因。`},{n:'62',t:`除本條第二項及第三項之轉帳傳票外，各種傳票於記入序時帳簿時，設有明細分類帳簿者，並應同時記入關係之明細分類帳簿。
+
+特種序時帳簿之按期結算，應過入總分類帳簿者，應先以其結數造具轉帳傳票，記入普通序時帳簿，始行過帳。但特種序時帳簿僅為現金出納序時帳簿一種者，得直接過入總分類帳簿。
+
+公務財物、特種財物，應就其明細分類帳簿按期結算，以其結數造具轉帳傳票，過入另設之統制帳簿。`},{n:'63',t:`各種特種序時帳簿，應於左列時期結總：
+
+一、每月終了時，遇事實上有需要者，得每月、每週、每五日或每日為之，均應另為累計之總數。
+
+二、各種會計事務之主管或主辦人員交代時。
+
+三、機關或基金結帳時。
+
+普通序時帳簿，於每月終了時、機關結帳時或主辦會計人員交代時，亦應結總。`},{n:'64',t:`各機關或基金有左列情形之一時，應辦理結帳或結算：
+
+一、會計年度終了時。
+
+二、有每月、每季或每半年結算一次之必要者，其每次結算時。
+
+三、非常事件，除第一款、第二款情形外，其事件終了時。
+
+四、機關裁撤或基金結束時。`},{n:'65',t:`各種分類帳簿之各帳目所有預收、預付、到期未收、到期未付及其他權責已發生而帳簿尚未登記之各事項，均應於結帳前先為整理紀錄。
+
+公營事業之會計事務，除為前項之整理紀錄外，對於呆帳、折舊、耗竭、攤銷，及材料、用品、產品等盤存，與內部損益銷轉，或其他應為整理之事項，均應為整理紀錄。
+
+各單位會計或附屬單位會計有所屬分會計者，應俟其所屬分會計之結帳報告到達後，再為整理紀錄。但所屬分會計因特殊事故，其結帳報告不能按期到達時，各該單位會計或附屬單位會計得先行整理結帳，加註說明，俟所屬分會計報告到達後，再行補作紀錄，整理結帳。`},{n:'66',t:`各帳目整理後，其借方、貸方之餘額，應依下列規定處理之：
+
+一、公務之會計事務，各收支帳目之餘額，應分別結入歲入預算及經費預算之各種帳目，以計算歲入及經費之餘絀。
+
+二、公營事業之會計事務，各損益帳目之餘額，應結入總損益之各種帳目，以為損益之計算。
+
+三、前二款會計事務，有關資產、負債性質各帳目之餘額，應轉入下年度或下期各該帳目。`},{n:'67',t:`會計報告、帳簿及重要備查帳或憑證內之記載，繕寫錯誤而當時發現者，應由原登記員劃線註銷更正，於更正處簽名或蓋章證明，不得挖補、擦、刮或用藥水塗滅。
+
+前項錯誤，於事後發現，而其錯誤不影響結數者，應由查覺人將情形呈明主辦會計人員，由主辦會計人員依前項辦法更正之；其錯誤影響結數者，另製傳票更正之。採用機器處理會計資料或貯存體之錯誤，其更正辦法由中央主計機關另訂之。
+
+因繕寫錯誤而致公庫受損失者，關係會計人員應負連帶損害賠償責任。`},{n:'68',t:`帳簿及重要備查簿內，如有重揭兩頁，致有空白時，將空白頁劃線註銷；如有誤空一行或二行，一列或二列者，應將誤空之行列劃線註銷，均應由登記員及主辦會計人員簽名或蓋章證明。`},{n:'69',t:`各傳票入帳後，應依照類別與日期號數之順序，彙訂成冊，另加封面，並於封面詳記起訖之年、月、日、張數及號數，由會計人員保存備核。`},{n:'70',t:`原始憑證，除依法送審計機關審核者外，應逐一標註傳票編號，附同傳票，依前條規定辦理；其不附入傳票保管者，亦應標註傳票編號，依序黏貼整齊，彙訂成冊，另加封面，並於封面詳記起訖之年、月、日、頁數及號數，由主辦會計人員於兩頁間中縫與每件黏貼邊縫，加蓋騎縫印章，由會計人員保存備核。但原始憑證便於分類裝訂成冊者，得免黏貼。依第九條集中處理會計事務者，其原始憑證之整理及保管，得由中央主計機關另訂辦法處理之。`},{n:'71',t:`左列各種原始憑證，不適用前條之規定。但仍應於前條冊內註明其保管處所及其檔案編號，或其他便於查對之事實：
+
+一、各種契約。
+
+二、應另歸檔案之文書及另行訂冊之報告書表。
+
+三、應留待將來使用之存取或保管現金、票據、證券及財物之憑證。
+
+四、應轉送其他機關之文件。
+
+五、其他事實上不能或不應黏貼訂冊之文件。`},{n:'72',t:`各種帳簿之首頁，應標明機關名稱、帳簿名稱、冊次、頁數、啟用日期，並由機關長官及主辦會計人員簽名或蓋章。`},{n:'73',t:`各種帳簿之末頁，應列經管人員一覽表，填明主辦會計人員及記帳、覆核等關係人員之姓名、職務與經管日期，並由各本人簽名或蓋章。`},{n:'74',t:`各種帳簿之帳頁，均應順序編號，不得撕毀。總分類帳簿及明細分類帳簿，並應在帳簿前加一目錄。`},{n:'75',t:`活頁帳簿每用一頁，應由主辦會計人員蓋章於該頁之下端；其首頁、末頁適用第七十二條、第七十三條之規定。但免填頁數，另置頁數累計表及臨時目錄於首頁之後，裝訂時應加封面，並為第七十四條之手續，隨將總頁數填入首頁。卡片式之活頁不能裝訂成冊者，應由經管人員裝匣保管。
+
+除總會計外，序時帳簿與分類帳簿不得同時並用活頁。`},{n:'76',t:`各種帳簿，除已用盡者外，在決算期前，不得更換新帳簿；其可長期賡續記載者，在決算期後，亦無庸更換。
+
+更換新帳簿時，應於舊帳簿空白頁上，逐頁註明空白作廢字樣。`},{n:'77',t:`採用機器處理會計資料者，因機器性能限制，得不適用第六十八條、第七十二條至第七十六條之規定。`},{n:'78',t:`使用完畢之會計報告、簿籍、機器處理會計資料之貯存體及裝訂成冊之會計憑證，均應分年編號收藏，並製目錄備查。`},{n:'79',t:`各項會計報告，應由機關長官及主辦會計人員簽名或蓋章；其有關各類主管或主辦人員之事務者，並應由該事務之主管或主辦人員會同簽名或蓋章。但內部使用之會計報告，機關長官免予簽名或蓋章。
+
+前項會計報告經彙訂成冊者，機關長官及主辦會計人員得僅在封面簽名或蓋章。`},{n:'80',t:`會計報告簿籍及憑證上之簽名或蓋章，不得用別字或別號。`},{n:'81',t:`第三十二條第一項第一款至第四款之報告，應各編以順序號數，其號數均應每年度重編一次。但在會計年度終了後整理期間內補編之報告，仍續編該終了年度之順序號數。`},{n:'82',t:`總會計年度報告之公告，依決算法之規定。
+
+各機關會計月報，應由會計人員按月向該機關公告之。但其中應保守秘密之部分，得不公告。
+
+各該機關人員對上項公告有疑義時，得向會計人員查詢之。`},{n:'83',t:`各種會計憑證，均應自總決算公布或令行日起，至少保存二年；屆滿二年後，除有關債權、債務者外，經該管上級機關與該管審計機關之同意，得予銷毀。
+
+前項保存期限，如有特殊原因，亦得依上述程序延長或縮短之。`},{n:'84',t:`各種會計報告、帳簿及重要備查簿，與機器處理會計資料之貯存體暨處理手冊，自總決算公布或令行日起，在總會計至少保存二十年；在單位會計、附屬單位會計至少保存十年；在分會計、附屬單位會計之分會計至少保存五年。其屆滿各該年限者，在總會計經行政長官及審計機關之同意，得移交文獻機關或其他相當機關保管之；在單位會計、附屬單位會計及分會計應經該管上級機關與該管審計機關之同意，始得銷毀之。但日報、五日報、週報、旬報、月報之保存期限，得縮短為三年。
+
+前項保存年限，如有特殊原因，得依前項程序縮短之。`},{n:'85',t:`各級分會計機關之會計報告，應由主辦會計人員依照規定之期日、期間及方式編製之，經該機關長官核閱後，呈送該管上級機關。`},{n:'86',t:`前條報告，經該管上級機關長官核閱後，應交其主辦會計人員查核之；其有統制、綜合之需要者，並應分別為統制之紀錄及綜合之報告。`},{n:'87',t:`各級分會計機關之會計報告，依次遞送至單位會計或附屬單位會計機關，單位會計或附屬單位會計機關長官核閱後，應交其主辦會計人員查核之；其有統制、綜合之需要者，並應分別為統制之紀錄或綜合之報告，呈送該管上級機關。
+
+前項單位會計機關，如為第二級機關單位時，應按其需要，分別報告該級政府之主計、公庫、財物經理及審計等機關。`},{n:'88',t:`各單位會計機關得以其報告逕行分送各該政府之主計、公庫、財物經理及審計等機關。但有必要時，亦得呈由上級單位會計機關分別轉送。`},{n:'89',t:`各該政府主計機關，接到各單位會計機關、各單位會計基金之各種會計報告後，其有統制、綜合之需要者，應分別為統制之紀錄，以彙編各該政府之會計總報告。`},{n:'90',t:`各該政府主計機關之會計總報告，與其政府之公庫、財物經理、徵課、公債、特種財物及特種基金等主管機關之報告發生差額時，應由該管審計機關核對，並製表解釋之。`},{n:'91',t:`各種會計報告，均應由編製機關存留副本備查。`},{n:'92',t:`採用機器集中處理會計資料者，其產生之會計報告或資料，由集中處理機關分送各有關機構。`},{n:'93',t:`各公務機關掌理一種以上之特種公務者，應辦理一種以上之特種公務之會計事務；其兼辦公營事業者，並應辦理公營事業之會計事務。
+
+非政府所屬機關代理政府事務者，對於所代理之事務，應依本法之規定，辦理會計事務。`},{n:'94',t:`各機關會計事務與非會計事務之劃分，應由主計機關會同關係機關核定。但法律另有規定者，依其規定。`},{n:'95',t:`各機關實施內部審核，應由會計人員執行之。但涉及非會計專業規定、實質或技術性事項，應由業務主辦單位負責辦理。
+
+內部審核分下列二種：
+
+一、事前審核：謂事項入帳前之審核，著重收支之控制。
+
+二、事後複核：謂事項入帳後之審核，著重憑證、帳表之複核與工作績效之查核。`},{n:'96',t:`內部審核之範圍如左：
+
+一、財務審核：謂計畫、預算之執行與控制之審核。
+
+二、財物審核：謂現金及其他財物之處理程序之審核。
+
+三、工作審核：謂計算工作負荷或工作成果每單位所費成本之審核。`},{n:'97',t:`內部審核之實施，兼採書面審核與實地抽查方式，並應規定分層負責，劃分辦理之範圍。`},{n:'98',t:`會計人員為行使內部審核職權，向各單位查閱簿籍、憑證暨其他文件，或檢查現金、財物時，各該負責人不得隱匿或拒絕。遇有疑問，並應為詳細之答復。
+
+會計人員行使前項職權，遇必要時，得報經該機關長官之核准，封鎖各項有關簿籍、憑證或其他文件，並得提取其一部或全部。`},{n:'99',t:`各機關主辦會計人員，對於不合法之會計程序或會計文書，應使之更正；不更正者，應拒絕之，並報告該機關主管長官。
+
+前項不合法之行為，由於該機關主管長官之命令者，應以書面聲明異議；如不接受時，應報告該機關之主管上級機關長官與其主辦會計人員或主計機關。
+
+不為前二項之異議及報告時，關於不合法行為之責任，主辦會計人員應連帶負之。`},{n:'99-1',t:`中華民國九十五年十二月三十一日以前各機關支用之國務機要計畫費用、特別費，其報支、經辦、核銷、支用及其他相關人員之財務責任均視為解除，不追究其行政及民事責任；如涉刑事責任者，不罰。`},{n:'100',t:`各機關會計人員對於財物之訂購或款項之預付，經查核與預算所定用途及計畫進度相合者，應為預算之保留。關係經費負擔或收入一切契約，及大宗動產、不動產之買賣契約，非經會計人員事前審核簽名或蓋章，不生效力。`},{n:'101',t:`會計憑證關係現金、票據、證券之出納者，非經主辦會計人員或其授權人之簽名或蓋章，不得為出納之執行。
+
+對外之收款收據，非經主辦會計人員或其授權人之簽名或蓋章者，不生效力。但有特殊情形者，得報經該管主計機關核准，另定處理辦法。`},{n:'102',t:`各機關會計人員審核原始憑證，發現有左列情形之一者，應拒絕簽署：
+
+一、未註明用途或案據者。
+
+二、依照法律或習慣應有之主要書據缺少或形式不具備者。
+
+三、應經招標、比價或議價程序始得舉辦之事項，而未經執行內部審核人員簽名或蓋章者。
+
+四、應經機關長官或事項之主管或主辦人員之簽名或蓋章，而未經其簽名或蓋章者。
+
+五、應經經手人、品質驗收人、數量驗收人及保管人簽名或蓋章而未經其簽名或蓋章者；或應附送品質或數量驗收之證明文件而未附送者。
+
+六、關係財物增減、保管、移轉之事項時，應經主辦經理事務人員簽名或蓋章，而未經其簽名或蓋章者。
+
+七、書據之數字或文字有塗改痕跡，而塗改處未經負責人員簽名或蓋章證明者。
+
+八、書據上表示金額或數量之文字、號碼不符者。
+
+九、第三款及第五款所舉辦之事項，其金額已達稽察限額之案件，未經依照法定稽察程序辦理者。
+
+十、其他與法令不符者。
+
+前項第四款規定之人員，得由各機關依其業務規模，按金額訂定分層負責辦法辦理之。`},{n:'103',t:`會計人員執行內部審核事項，應依照有關法令辦理；非因違法失職或重大過失，不負損害賠償責任。`},{n:'104',t:`各該政府所屬各機關主辦會計人員及其佐理人員之任免、遷調、訓練及考績，由各該政府之主計機關依法為之。`},{n:'105',t:`主計機關派駐各機關之辦理會計人員所需一般費用，應列入所在機關之經費預算；其屬專案業務費，得列入該管主計機關之預算。`},{n:'106',t:`各該政府所屬各機關之會計事務，由各該管主計機關派駐之主辦會計人員綜理、監督、指揮之；主計機關得隨時派員赴各機關視察會計制度之實施狀況，與會計人員之辦理情形。`},{n:'107',t:`各機關辦理第五條至第七條所列各種會計事務之佐理人員，均應由主計機關派充，除直接對於前條主辦會計人員負責外，並依其性質，分別對於各類事務之主管或主辦人員負責，而受其指揮。`},{n:'108',t:`第五條至第七條所列各種會計事務，在事務簡單之機關得合併或委託辦理。但會計事務設有專員辦理者，不得兼辦出納或經理財物之事務。`},{n:'109',t:`各機關之會計憑證、會計報告及記載完畢之會計簿籍等檔案，於總決算公布或令行日後，應由主辦會計人員移交所在機關管理檔案人員保管之。但使用機器處理會計資料所用之儲存體，得另行處理之。
+
+會計檔案遇有遺失、損毀等情事時，應即呈報該管上級主辦會計人員或主計機關及所在機關長官與該管審計機關，分別轉呈各該管最上級機關，非經審計機關認為其對於良善管理人應有之注意並無怠忽，且予解除責任者，應付懲戒。
+
+遇有前項情事，匿不呈報者，從重懲戒。
+
+因第二項或第三項情事，致公庫受損害者，負賠償責任。`},{n:'110',t:`主辦會計人員與所在機關長官因會計事務發生爭執時，由該管上級機關之主管長官及其主辦會計人員處理之。會計人員有違法或失職情事時，經所在機關長官函達主計機關長官，應即依法處理之。`},{n:'111',t:`主辦會計人員之請假或出差，應呈請該管上級機關之主辦會計人員或主計機關指派人員代理；其期間不逾一個月者，得自行委託人員代理。但仍應先期呈報，並連帶負責。`},{n:'112',t:`會計人員不得兼營會計師、律師業務，除法律另有規定外，不得兼任公務機關、公私營業機構之職務。`},{n:'113',t:`會計人員經解除或變更其職務者，應辦交代。但短期給假或因公出差者，不在此限。`},{n:'114',t:`主辦會計人員辦理交代，應由所在機關長官或其代表及上級機關主辦會計人員或其代表監交。
+
+前項人員交代時，應將印信、文件及其他公有物與其經管之會計憑證、會計簿籍、會計報告、機器處理會計資料之貯存體、機器處理會計手冊，造表悉數交付後任，其已編有目錄者，依目錄移交，得不另行造表。`},{n:'115',t:`會計佐理人員辦理交代，應由主辦會計人員或其代表監交；交代時，應將業務上所用之章戳、文件、簿籍及其他公有物並經辦未了事件，造表悉數交付後任。`},{n:'116',t:`交代人員應將經管帳簿及重要備查簿，由前任人員蓋章於其經管最末一筆帳項之後；新任蓋章於其最初一筆帳項之前。均註明年、月、日，證明責任之終始。`},{n:'117',t:`主辦會計人員，應自後任接替之日起五日內交代清楚，非取得交代證明書後，不得擅離任所。但前任因病卸職或在任病故時，得由其最高級佐理人員代辦交代，均仍由該前任負責。
+
+後任接受移交時，應即會同監交人員，於二日內依據移交表或目錄，逐項點收清楚，出具交代證明書，交前任收執，並會同前任呈報所在機關長官及各該管上級機關。但移交簿籍之內容，仍由前任負責。`},{n:'118',t:`會計佐理人員，自後任接替之日起二日內交代清楚，除因病卸任者，得委託代辦交代外，其在任病故者之交代，應由其該管上級人員為之。`},{n:'119',t:`會計人員交代不清者，應依法懲處；因而致公庫損失者，並負賠償責任；與交代不清有關係之人員，應連帶負責。`},{n:'120',t:`因機關被裁或基金結束而交代時，交代人員視為前任，接受人員視為後任；其交代適用本章之規定。`},{n:'121',t:`受政府補助之民間團體及公私合營之事業，其會計制度及其會計報告程序，準用本法之規定；其適用範圍，由中央主計機關酌定之。`},{n:'122',t:`本法自公布日施行。`},],
+'政府採購法':[{n:'1',t:`為建立政府採購制度，依公平、公開之採購程序，提升採購效率與功能，確保採購品質，爰制定本法。`},{n:'2',t:`本法所稱採購，指工程之定作、財物之買受、定製、承租及勞務之委任或僱傭等。`},{n:'3',t:`政府機關、公立學校、公營事業（以下簡稱機關）辦理採購，依本法之規定；本法未規定者，適用其他法律之規定。`},{n:'4',t:`法人或團體接受機關補助辦理採購，其補助金額占採購金額半數以上，且補助金額在公告金額以上者，適用本法之規定，並應受該機關之監督。
+
+藝文採購不適用前項規定，但應受補助機關之監督；其辦理原則、適用範圍及監督管理辦法，由文化部定之。`},{n:'5',t:`機關採購得委託法人或團體代辦。
+
+前項採購適用本法之規定，該法人或團體並受委託機關之監督。`},{n:'6',t:`機關辦理採購，應以維護公共利益及公平合理為原則，對廠商不得為無正當理由之差別待遇。
+
+辦理採購人員於不違反本法規定之範圍內，得基於公共利益、採購效益或專業判斷之考量，為適當之採購決定。
+
+司法、監察或其他機關對於採購機關或人員之調查、起訴、審判、彈劾或糾舉等，得洽請主管機關協助、鑑定或提供專業意見。`},{n:'7',t:`本法所稱工程，指在地面上下新建、增建、改建、修建、拆除構造物與其所屬設備及改變自然環境之行為，包括建築、土木、水利、環境、交通、機械、電氣、化工及其他經主管機關認定之工程。
+
+本法所稱財物，指各種物品（生鮮農漁產品除外）、材料、設備、機具與其他動產、不動產、權利及其他經主管機關認定之財物。
+
+本法所稱勞務，指專業服務、技術服務、資訊服務、研究發展、營運管理、維修、訓練、勞力及其他經主管機關認定之勞務。
+
+採購兼有工程、財物、勞務二種以上性質，難以認定其歸屬者，按其性質所占預算金額比率最高者歸屬之。`},{n:'8',t:`本法所稱廠商，指公司、合夥或獨資之工商行號及其他得提供各機關工程、財物、勞務之自然人、法人、機構或團體。`},{n:'9',t:`本法所稱主管機關，為行政院採購暨公共工程委員會，以政務委員一人兼任主任委員。
+
+本法所稱上級機關，指辦理採購機關直屬之上一級機關。其無上級機關者，由該機關執行本法所規定上級機關之職權。`},{n:'10',t:`主管機關掌理下列有關政府採購事項：
+
+一、政府採購政策與制度之研訂及政令之宣導。
+
+二、政府採購法令之研訂、修正及解釋。
+
+三、標準採購契約之檢討及審定。
+
+四、政府採購資訊之蒐集、公告及統計。
+
+五、政府採購專業人員之訓練。
+
+六、各機關採購之協調、督導及考核。
+
+七、中央各機關採購申訴之處理。
+
+八、其他關於政府採購之事項。`},{n:'11',t:`主管機關應設立採購資訊中心，統一蒐集共通性商情及同等品分類之資訊，並建立工程價格資料庫，以供各機關採購預算編列及底價訂定之參考。除應秘密之部分外，應無償提供廠商。
+
+機關辦理工程採購之預算金額達一定金額以上者，應於決標後將得標廠商之單價資料傳輸至前項工程價格資料庫。
+
+前項一定金額、傳輸資料內容、格式、傳輸方式及其他相關事項之辦法，由主管機關定之。
+
+財物及勞務項目有建立價格資料庫之必要者，得準用前二項規定。`},{n:'11-1',t:`機關辦理巨額工程採購，應依採購之特性及實際需要，成立採購工作及審查小組，協助審查採購需求與經費、採購策略、招標文件等事項，及提供與採購有關事務之諮詢。
+
+機關辦理第一項以外之採購，依採購特性及實際需要，認有成立採購工作及審查小組之必要者，準用前項規定。
+
+前二項採購工作及審查小組之組成、任務、審查作業及其他相關事項之辦法，由主管機關定之。`},{n:'12',t:`機關辦理查核金額以上採購之開標、比價、議價、決標及驗收時，應於規定期限內，檢送相關文件報請上級機關派員監辦；上級機關得視事實需要訂定授權條件，由機關自行辦理。
+
+機關辦理未達查核金額之採購，其決標金額達查核金額者，或契約變更後其金額達查核金額者，機關應補具相關文件送上級機關備查。
+
+查核金額由主管機關定之。`},{n:'13',t:`機關辦理公告金額以上採購之開標、比價、議價、決標及驗收，除有特殊情形者外，應由其主（會）計及有關單位會同監辦。
+
+未達公告金額採購之監辦，依其屬中央或地方，由主管機關、直轄市或縣（市）政府另定之。未另定者，比照前項規定辦理。
+
+公告金額應低於查核金額，由主管機關參酌國際標準定之。
+
+第一項會同監辦採購辦法，由主管機關會同行政院主計處定之。`},{n:'14',t:`機關不得意圖規避本法之適用，分批辦理公告金額以上之採購。其有分批辦理之必要，並經上級機關核准者，應依其總金額核計採購金額，分別按公告金額或查核金額以上之規定辦理。`},{n:'15',t:`機關承辦、監辦採購人員離職後三年內不得為本人或代理廠商向原任職機關接洽處理離職前五年內與職務有關之事務。
+
+機關人員對於與採購有關之事項，涉及本人、配偶、二親等以內親屬，或共同生活家屬之利益時，應行迴避。
+
+機關首長發現前項人員有應行迴避之情事而未依規定迴避者，應令其迴避，並另行指定人員辦理。`},{n:'16',t:`請託或關說，宜以書面為之或作成紀錄。
+
+政風機構得調閱前項書面或紀錄。
+
+第一項之請託或關說，不得作為評選之參考。`},{n:'17',t:`外國廠商參與各機關採購，應依我國締結之條約或協定之規定辦理。
+
+前項以外情形，外國廠商參與各機關採購之處理辦法，由主管機關定之。
+
+外國法令限制或禁止我國廠商或產品服務參與採購者，主管機關得限制或禁止該國廠商或產品服務參與採購。
+
+機關辦理涉及國家安全之採購，有對我國或外國廠商資格訂定限制條件之必要者，其限制條件及審查相關作業事項之辦法，由主管機關會商相關目的事業主管機關定之。`},{n:'18',t:`採購之招標方式，分為公開招標、選擇性招標及限制性招標。
+
+本法所稱公開招標，指以公告方式邀請不特定廠商投標。
+
+本法所稱選擇性招標，指以公告方式預先依一定資格條件辦理廠商資格審查後，再行邀請符合資格之廠商投標。
+
+本法所稱限制性招標，指不經公告程序，邀請二家以上廠商比價或僅邀請一家廠商議價。`},{n:'19',t:`機關辦理公告金額以上之採購，除依第二十條及第二十二條辦理者外，應公開招標。`},{n:'20',t:`機關辦理公告金額以上之採購，符合下列情形之一者，得採選擇性招標：
+
+一、經常性採購。
+
+二、投標文件審查，須費時長久始能完成者。
+
+三、廠商準備投標需高額費用者。
+
+四、廠商資格條件複雜者。
+
+五、研究發展事項。`},{n:'21',t:`機關為辦理選擇性招標，得預先辦理資格審查，建立合格廠商名單。但仍應隨時接受廠商資格審查之請求，並定期檢討修正合格廠商名單。
+
+未列入合格廠商名單之廠商請求參加特定招標時，機關於不妨礙招標作業，並能適時完成其資格審查者，於審查合格後，邀其投標。
+
+經常性採購，應建立六家以上之合格廠商名單。
+
+機關辦理選擇性招標，應予經資格審查合格之廠商平等受邀之機會。`},{n:'22',t:`機關辦理公告金額以上之採購，符合下列情形之一者，得採限制性招標：
+
+一、以公開招標、選擇性招標或依第九款至第十一款公告程序辦理結果，無廠商投標或無合格標，且以原定招標內容及條件未經重大改變者。
+
+二、屬專屬權利、獨家製造或供應、藝術品、秘密諮詢，無其他合適之替代標的者。
+
+三、遇有不可預見之緊急事故，致無法以公開或選擇性招標程序適時辦理，且確有必要者。
+
+四、原有採購之後續維修、零配件供應、更換或擴充，因相容或互通性之需要，必須向原供應廠商採購者。
+
+五、屬原型或首次製造、供應之標的，以研究發展、實驗或開發性質辦理者。
+
+六、在原招標目的範圍內，因未能預見之情形，必須追加契約以外之工程，如另行招標，確有產生重大不便及技術或經濟上困難之虞，非洽原訂約廠商辦理，不能達契約之目的，且未逾原主契約金額百分之五十者。
+
+七、原有採購之後續擴充，且已於原招標公告及招標文件敘明擴充之期間、金額或數量者。
+
+八、在集中交易或公開競價市場採購財物。
+
+九、委託專業服務、技術服務、資訊服務或社會福利服務，經公開客觀評選為優勝者。
+
+十、辦理設計競賽，經公開客觀評選為優勝者。
+
+十一、因業務需要，指定地區採購房地產，經依所需條件公開徵求勘選認定適合需要者。
+
+十二、購買身心障礙者、原住民或受刑人個人、身心障礙福利機構或團體、政府立案之原住民團體、監獄工場、慈善機構及庇護工場所提供之非營利產品或勞務。
+
+十三、委託在專業領域具領先地位之自然人或經公告審查優勝之學術或非營利機構進行科技、技術引進、行政或學術研究發展。
+
+十四、邀請或委託具專業素養、特質或經公告審查優勝之文化、藝術專業人士、機構或團體表演或參與文藝活動或提供文化創意服務。
+
+十五、公營事業為商業性轉售或用於製造產品、提供服務以供轉售目的所為之採購，基於轉售對象、製程或供應源之特性或實際需要，不適宜以公開招標或選擇性招標方式辦理者。
+
+十六、其他經主管機關認定者。
+
+前項第九款專業服務、技術服務、資訊服務及第十款之廠商評選辦法與服務費用計算方式與第十一款、第十三款及第十四款之作業辦法，由主管機關定之。
+
+第一項第九款社會福利服務之廠商評選辦法與服務費用計算方式，由主管機關會同中央目的事業主管機關定之。
+
+第一項第十三款及第十四款，不適用工程採購。`},{n:'23',t:`未達公告金額之招標方式，在中央由主管機關定之；在地方由直轄市或縣（市）政府定之。地方未定者，比照中央規定辦理。`},{n:'24',t:`機關基於效率及品質之要求，得以統包辦理招標。
+
+前項所稱統包，指將工程或財物採購中之設計與施工、供應、安裝或一定期間之維修等併於同一採購契約辦理招標。
+
+統包實施辦法，由主管機關定之。`},{n:'25',t:`機關得視個別採購之特性，於招標文件中規定允許一定家數內之廠商共同投標。
+
+第一項所稱共同投標，指二家以上之廠商共同具名投標，並於得標後共同具名簽約，連帶負履行採購契約之責，以承攬工程或提供財物、勞務之行為。
+
+共同投標以能增加廠商之競爭或無不當限制競爭者為限。
+
+同業共同投標應符合公平交易法第十五條第一項但書各款之規定。
+
+共同投標廠商應於投標時檢附共同投標協議書。
+
+共同投標辦法，由主管機關定之。`},{n:'26',t:`機關辦理公告金額以上之採購，應依功能或效益訂定招標文件。其有國際標準或國家標準者，應從其規定。
+
+機關所擬定、採用或適用之技術規格，其所標示之擬採購產品或服務之特性，諸如品質、性能、安全、尺寸、符號、術語、包裝、標誌及標示或生產程序、方法及評估之程序，在目的及效果上均不得限制競爭。
+
+招標文件不得要求或提及特定之商標或商名、專利、設計或型式、特定來源地、生產者或供應者。但無法以精確之方式說明招標要求，而已在招標文件內註明諸如「或同等品」字樣者，不在此限。`},{n:'26-1',t:`機關得視採購之特性及實際需要，以促進自然資源保育與環境保護為目的，依前條規定擬定技術規格，及節省能源、節約資源、減少溫室氣體排放之相關措施。
+
+前項增加計畫經費或技術服務費用者，於擬定規格或措施時應併入計畫報核編列預算。`},{n:'27',t:`機關辦理公開招標或選擇性招標，應將招標公告或辦理資格審查之公告刊登於政府採購公報並公開於資訊網路。公告之內容修正時，亦同。
+
+前項公告內容、公告日數、公告方法及政府採購公報發行辦法，由主管機關定之。
+
+機關辦理採購時，應估計採購案件之件數及每件之預計金額。預算及預計金額，得於招標公告中一併公開。`},{n:'28',t:`機關辦理招標，其自公告日或邀標日起至截止投標或收件日止之等標期，應訂定合理期限。其期限標準，由主管機關定之。`},{n:'29',t:`公開招標之招標文件及選擇性招標之預先辦理資格審查文件，應自公告日起至截止投標日或收件日止，公開發給、發售及郵遞方式辦理。發給、發售或郵遞時，不得登記領標廠商之名稱。
+
+選擇性招標之文件應公開載明限制投標廠商資格之理由及其必要性。
+
+第一項文件內容，應包括投標廠商提交投標書所需之一切必要資料。`},{n:'30',t:`機關辦理招標，應於招標文件中規定投標廠商須繳納押標金；得標廠商須繳納保證金或提供或併提供其他擔保。但有下列情形之一者，不在此限：
+
+一、勞務採購，以免收押標金、保證金為原則。
+
+二、未達公告金額之工程、財物採購，得免收押標金、保證金。
+
+三、以議價方式辦理之採購，得免收押標金。
+
+四、依市場交易慣例或採購案特性，無收取押標金、保證金之必要或可能。
+
+押標金及保證金應由廠商以現金、金融機構簽發之本票或支票、保付支票、郵政匯票、政府公債、設定質權之金融機構定期存款單、銀行開發或保兌之不可撤銷擔保信用狀繳納，或取具銀行之書面連帶保證、保險公司之連帶保證保險單為之。
+
+押標金、保證金與其他擔保之種類、額度、繳納、退還、終止方式及其他相關作業事項之辦法，由主管機關另定之。`},{n:'31',t:`機關對於廠商所繳納之押標金，應於決標後無息發還未得標之廠商。廢標時，亦同。
+
+廠商有下列情形之一者，其所繳納之押標金，不予發還；其未依招標文件規定繳納或已發還者，並予追繳：
+
+一、以虛偽不實之文件投標。
+
+二、借用他人名義或證件投標，或容許他人借用本人名義或證件參加投標。
+
+三、冒用他人名義或證件投標。
+
+四、得標後拒不簽約。
+
+五、得標後未於規定期限內，繳足保證金或提供擔保。
+
+六、對採購有關人員行求、期約或交付不正利益。
+
+七、其他經主管機關認定有影響採購公正之違反法令行為。
+
+前項追繳押標金之情形，屬廠商未依招標文件規定繳納者，追繳金額依招標文件中規定之額度定之；其為標價之一定比率而無標價可供計算者，以預算金額代之。
+
+第二項追繳押標金之請求權，因五年間不行使而消滅。
+
+前項期間，廠商未依招標文件規定繳納者，自開標日起算；機關已發還押標金者，自發還日起算；得追繳之原因發生或可得知悉在後者，自原因發生或可得知悉時起算。
+
+追繳押標金，自不予開標、不予決標、廢標或決標日起逾十五年者，不得行使。`},{n:'32',t:`機關應於招標文件中規定，得不發還得標廠商所繳納之保證金及其孳息，或擔保者應履行其擔保責任之事由，並敘明該項事由所涉及之違約責任、保證金之抵充範圍及擔保者之擔保責任。`},{n:'33',t:`廠商之投標文件，應以書面密封，於投標截止期限前，以郵遞或專人送達招標機關或其指定之場所。
+
+前項投標文件，廠商得以電子資料傳輸方式遞送。但以招標文件已有訂明者為限，並應於規定期限前遞送正式文件。
+
+機關得於招標文件中規定允許廠商於開標前補正非契約必要之點之文件。`},{n:'34',t:`機關辦理採購，其招標文件於公告前應予保密。但須公開說明或藉以公開徵求廠商提供參考資料者，不在此限。
+
+機關辦理招標，不得於開標前洩漏底價，領標、投標廠商之名稱與家數及其他足以造成限制競爭或不公平競爭之相關資料。
+
+底價於開標後至決標前，仍應保密，決標後除有特殊情形外，應予公開。但機關依實際需要，得於招標文件中公告底價。
+
+機關對於廠商投標文件，除供公務上使用或法令另有規定外，應保守秘密。`},{n:'35',t:`機關得於招標文件中規定，允許廠商在不降低原有功能條件下，得就技術、工法、材料或設備，提出可縮減工期、減省經費或提高效率之替代方案。其實施辦法，由主管機關定之。`},{n:'36',t:`機關辦理採購，得依實際需要，規定投標廠商之基本資格。
+
+特殊或巨額之採購，須由具有相當經驗、實績、人力、財力、設備等之廠商始能擔任者，得另規定投標廠商之特定資格。
+
+外國廠商之投標資格及應提出之資格文件，得就實際需要另行規定，附經公證或認證之中文譯本，並於招標文件中訂明。
+
+第一項基本資格、第二項特定資格與特殊或巨額採購之範圍及認定標準，由主管機關定之。`},{n:'37',t:`機關訂定前條投標廠商之資格，不得不當限制競爭，並以確認廠商具備履行契約所必須之能力者為限。
+
+投標廠商未符合前條所定資格者，其投標不予受理。但廠商之財力資格，得以銀行或保險公司之履約及賠償連帶保證責任、連帶保證保險單代之。`},{n:'38',t:`政黨及與其具關係企業關係之廠商，不得參與投標。
+
+前項具關係企業關係之廠商，準用公司法有關關係企業之規定。`},{n:'39',t:`機關辦理採購，得依本法將其對規劃、設計、供應或履約業務之專案管理，委託廠商為之。
+
+承辦專案管理之廠商，其負責人或合夥人不得同時為規劃、設計、施工或供應廠商之負責人或合夥人。
+
+承辦專案管理之廠商與規劃、設計、施工或供應廠商，不得同時為關係企業或同一其他廠商之關係企業。`},{n:'40',t:`機關之採購，得洽由其他具有專業能力之機關代辦。
+
+上級機關對於未具有專業採購能力之機關，得命其洽由其他具有專業能力之機關代辦採購。`},{n:'41',t:`廠商對招標文件內容有疑義者，應於招標文件規定之日期前，以書面向招標機關請求釋疑。
+
+機關對前項疑義之處理結果，應於招標文件規定之日期前，以書面答復請求釋疑之廠商，必要時得公告之；其涉及變更或補充招標文件內容者，除選擇性招標之規格標與價格標及限制性招標得以書面通知各廠商外，應另行公告，並視需要延長等標期。機關自行變更或補充招標文件內容者，亦同。`},{n:'42',t:`機關辦理公開招標或選擇性招標，得就資格、規格與價格採取分段開標。
+
+機關辦理分段開標，除第一階段應公告外，後續階段之邀標，得免予公告。`},{n:'43',t:`機關辦理採購，除我國締結之條約或協定另有禁止規定者外，得採行下列措施之一，並應載明於招標文件中：
+
+一、要求投標廠商採購國內貨品比率、技術移轉、投資、協助外銷或其他類似條件，作為採購評選之項目，其比率不得逾三分之一。
+
+二、外國廠商為最低標，且其標價符合第五十二條規定之決標原則者，得以該標價優先決標予國內廠商。`},{n:'44',t:`機關辦理特定之採購，除我國締結之條約或協定另有禁止規定者外，得對國內產製加值達百分之五十之財物或國內供應之工程、勞務，於外國廠商為最低標，且其標價符合第五十二條規定之決標原則時，以高於該標價一定比率以內之價格，優先決標予國內廠商。
+
+前項措施之採行，以合於就業或產業發展政策者為限，且一定比率不得逾百分之三，優惠期限不得逾五年；其適用範圍、優惠比率及實施辦法，由主管機關會同相關目的事業主管機關定之。`},{n:'45',t:`公開招標及選擇性招標之開標，除法令另有規定外，應依招標文件公告之時間及地點公開為之。`},{n:'46',t:`機關辦理採購，除本法另有規定外，應訂定底價。底價應依圖說、規範、契約並考量成本、市場行情及政府機關決標資料逐項編列，由機關首長或其授權人員核定。
+
+前項底價之訂定時機，依下列規定辦理：
+
+一、公開招標應於開標前定之。
+
+二、選擇性招標應於資格審查後之下一階段開標前定之。
+
+三、限制性招標應於議價或比價前定之。`},{n:'47',t:`機關辦理下列採購，得不訂底價。但應於招標文件內敘明理由及決標條件與原則：
+
+一、訂定底價確有困難之特殊或複雜案件。
+
+二、以最有利標決標之採購。
+
+三、小額採購。
+
+前項第一款及第二款之採購，得規定廠商於投標文件內詳列報價內容。
+
+小額採購之金額，在中央由主管機關定之；在地方由直轄市或縣（市）政府定之。但均不得逾公告金額十分之一。地方未定者，比照中央規定辦理。`},{n:'48',t:`機關依本法規定辦理招標，除有下列情形之一不予開標決標外，有三家以上合格廠商投標，即應依招標文件所定時間開標決標：
+
+一、變更或補充招標文件內容者。
+
+二、發現有足以影響採購公正之違法或不當行為者。
+
+三、依第八十二條規定暫緩開標者。
+
+四、依第八十四條規定暫停採購程序者。
+
+五、依第八十五條規定由招標機關另為適法之處置者。
+
+六、因應突發事故者。
+
+七、採購計畫變更或取銷採購者。
+
+八、經主管機關認定之特殊情形。
+
+第一次開標，因未滿三家而流標者，第二次招標之等標期間得予縮短，並得不受前項三家廠商之限制。`},{n:'49',t:`未達公告金額之採購，其金額逾公告金額十分之一者，除第二十二條第一項各款情形外，仍應公開取得三家以上廠商之書面報價或企劃書。`},{n:'50',t:`投標廠商有下列情形之一，經機關於開標前發現者，其所投之標應不予開標；於開標後發現者，應不決標予該廠商：
+
+一、未依招標文件之規定投標。
+
+二、投標文件內容不符合招標文件之規定。
+
+三、借用或冒用他人名義或證件投標。
+
+四、以不實之文件投標。
+
+五、不同投標廠商間之投標文件內容有重大異常關聯。
+
+六、第一百零三條第一項不得參加投標或作為決標對象之情形。
+
+七、其他影響採購公正之違反法令行為。
+
+決標或簽約後發現得標廠商於決標前有第一項情形者，應撤銷決標、終止契約或解除契約，並得追償損失。但撤銷決標、終止契約或解除契約反不符公共利益，並經上級機關核准者，不在此限。
+
+第一項不予開標或不予決標，致採購程序無法繼續進行者，機關得宣布廢標。`},{n:'51',t:`機關應依招標文件規定之條件，審查廠商投標文件，對其內容有疑義時，得通知投標廠商提出說明。
+
+前項審查結果應通知投標廠商，對不合格之廠商，並應敘明其原因。`},{n:'52',t:`機關辦理採購之決標，應依下列原則之一辦理，並應載明於招標文件中：
+
+一、訂有底價之採購，以合於招標文件規定，且在底價以內之最低標為得標廠商。
+
+二、未訂底價之採購，以合於招標文件規定，標價合理，且在預算數額以內之最低標為得標廠商。
+
+三、以合於招標文件規定之最有利標為得標廠商。
+
+四、採用複數決標之方式：機關得於招標文件中公告保留之採購項目或數量選擇之組合權利，但應合於最低價格或最有利標之競標精神。
+
+機關辦理公告金額以上之專業服務、技術服務、資訊服務、社會福利服務或文化創意服務者，以不訂底價之最有利標為原則。
+
+決標時得不通知投標廠商到場，其結果應通知各投標廠商。`},{n:'53',t:`合於招標文件規定之投標廠商之最低標價超過底價時，得洽該最低標廠商減價一次；減價結果仍超過底價時，得由所有合於招標文件規定之投標廠商重新比減價格，比減價格不得逾三次。
+
+前項辦理結果，最低標價仍超過底價而不逾預算數額，機關確有緊急情事需決標時，應經原底價核定人或其授權人員核准，且不得超過底價百分之八。但查核金額以上之採購，超過底價百分之四者，應先報經上級機關核准後決標。`},{n:'54',t:`決標依第五十二條第一項第二款規定辦理者，合於招標文件規定之最低標價逾評審委員會建議之金額或預算金額時，得洽該最低標廠商減價一次。減價結果仍逾越上開金額時，得由所有合於招標文件規定之投標廠商重新比減價格。機關得就重新比減價格之次數予以限制，比減價格不得逾三次，辦理結果，最低標價仍逾越上開金額時，應予廢標。`},{n:'55',t:`機關辦理以最低標決標之採購，經報上級機關核准，並於招標公告及招標文件內預告者，得於依前二條規定無法決標時，採行協商措施。`},{n:'56',t:`決標依第五十二條第一項第三款規定辦理者，應依招標文件所規定之評審標準，就廠商投標標的之技術、品質、功能、商業條款或價格等項目，作序位或計數之綜合評選，評定最有利標。價格或其與綜合評選項目評分之商數，得做為單獨評選之項目或決標之標準。未列入之項目，不得做為評選之參考。評選結果無法依機關首長或評選委員會過半數之決定，評定最有利標時，得採行協商措施，再作綜合評選，評定最有利標。評定應附理由。綜合評選不得逾三次。
+
+依前項辦理結果，仍無法評定最有利標時，應予廢標。
+
+機關採最有利標決標者，應先報經上級機關核准。
+
+最有利標之評選辦法，由主管機關定之。`},{n:'57',t:`機關依前二條之規定採行協商措施者，應依下列原則辦理：
+
+一、開標、投標、審標程序及內容均應予保密。
+
+二、協商時應平等對待所有合於招標文件規定之投標廠商，必要時並錄影或錄音存證。
+
+三、原招標文件已標示得更改項目之內容，始得納入協商。
+
+四、前款得更改之項目變更時，應以書面通知所有得參與協商之廠商。
+
+五、協商結束後，應予前款廠商依據協商結果，於一定期間內修改投標文件重行遞送之機會。`},{n:'58',t:`機關辦理採購採最低標決標時，如認為最低標廠商之總標價或部分標價偏低，顯不合理，有降低品質、不能誠信履約之虞或其他特殊情形，得限期通知該廠商提出說明或擔保。廠商未於機關通知期限內提出合理之說明或擔保者，得不決標予該廠商，並以次低標廠商為最低標廠商。`},{n:'59',t:`廠商不得以支付他人佣金、比例金、仲介費、後謝金或其他不正利益為條件，促成採購契約之成立。
+
+違反前項規定者，機關得終止或解除契約，並將二倍之不正利益自契約價款中扣除。未能扣除者，通知廠商限期給付之。`},{n:'60',t:`機關辦理採購依第五十一條、第五十三條、第五十四條或第五十七條規定，通知廠商說明、減價、比減價格、協商、更改原報內容或重新報價，廠商未依通知期限辦理者，視同放棄。`},{n:'61',t:`機關辦理公告金額以上採購之招標，除有特殊情形者外，應於決標後一定期間內，將決標結果之公告刊登於政府採購公報，並以書面通知各投標廠商。無法決標者，亦同。`},{n:'62',t:`機關辦理採購之決標資料，應定期彙送主管機關。`},{n:'63',t:`各類採購契約以採用主管機關訂定之範本為原則，其要項及內容由主管機關參考國際及國內慣例定之。
+
+採購契約應訂明一方執行錯誤、不實或管理不善，致他方遭受損害之責任。`},{n:'64',t:`採購契約得訂明因政策變更，廠商依契約繼續履行反而不符公共利益者，機關得報經上級機關核准，終止或解除部分或全部契約，並補償廠商因此所生之損失。`},{n:'65',t:`得標廠商應自行履行工程、勞務契約，不得轉包。
+
+前項所稱轉包，指將原契約中應自行履行之全部或其主要部分，由其他廠商代為履行。
+
+廠商履行財物契約，其需經一定履約過程，非以現成財物供應者，準用前二項規定。`},{n:'66',t:`得標廠商違反前條規定轉包其他廠商時，機關得解除契約、終止契約或沒收保證金，並得要求損害賠償。
+
+前項轉包廠商與得標廠商對機關負連帶履行及賠償責任。再轉包者，亦同。`},{n:'67',t:`得標廠商得將採購分包予其他廠商。稱分包者，謂非轉包而將契約之部分由其他廠商代為履行。
+
+分包契約報備於採購機關，並經得標廠商就分包部分設定權利質權予分包廠商者，民法第五百十三條之抵押權及第八百十六條因添附而生之請求權，及於得標廠商對於機關之價金或報酬請求權。
+
+前項情形，分包廠商就其分包部分，與得標廠商連帶負瑕疵擔保責任。`},{n:'68',t:`得標廠商就採購契約對於機關之價金或報酬請求權，其全部或一部得為權利質權之標的。`},{n:'70',t:`機關辦理工程採購，應明訂廠商執行品質管理、環境保護、施工安全衛生之責任，並對重點項目訂定檢查程序及檢驗標準。
+
+機關於廠商履約過程，得辦理分段查驗，其結果並得供驗收之用。
+
+中央及直轄市、縣（市）政府應成立工程施工查核小組，定期查核所屬（轄）機關工程品質及進度等事宜。
+
+工程施工查核小組之組織準則，由主管機關擬訂，報請行政院核定後發布之。其作業辦法，由主管機關定之。
+
+財物或勞務採購需經一定履約過程，而非以現成財物或勞務供應者，準用第一項及第二項之規定。`},{n:'70-1',t:`機關辦理工程規劃、設計，應依工程規模及特性，分析潛在施工危險，編製符合職業安全衛生法規之安全衛生圖說及規範，並量化編列安全衛生費用。
+
+機關辦理工程採購，應將前項設計成果納入招標文件，並於招標文件規定廠商須依職業安全衛生法規，採取必要之預防設備或措施，實施安全衛生管理及訓練，使勞工免於發生職業災害，以確保施工安全。
+
+廠商施工場所依法令或契約應有之安全衛生設施欠缺或不良，致發生職業災害者，除應受職業安全衛生相關法令處罰外，機關應依本法及契約規定處置。`},{n:'71',t:`機關辦理工程、財物採購，應限期辦理驗收，並得辦理部分驗收。
+
+驗收時應由機關首長或其授權人員指派適當人員主驗，通知接管單位或使用單位會驗。
+
+機關承辦採購單位之人員不得為所辦採購之主驗人或樣品及材料之檢驗人。
+
+前三項之規定，於勞務採購準用之。`},{n:'72',t:`機關辦理驗收時應製作紀錄，由參加人員會同簽認。驗收結果與契約、圖說、貨樣規定不符者，應通知廠商限期改善、拆除、重作、退貨或換貨。其驗收結果不符部分非屬重要，而其他部分能先行使用，並經機關檢討認為確有先行使用之必要者，得經機關首長或其授權人員核准，就其他部分辦理驗收並支付部分價金。
+
+驗收結果與規定不符，而不妨礙安全及使用需求，亦無減少通常效用或契約預定效用，經機關檢討不必拆換或拆換確有困難者，得於必要時減價收受。其在查核金額以上之採購，應先報經上級機關核准；未達查核金額之採購，應經機關首長或其授權人員核准。
+
+驗收人對工程、財物隱蔽部分，於必要時得拆驗或化驗。`},{n:'73',t:`工程、財物採購經驗收完畢後，應由驗收及監驗人員於結算驗收證明書上分別簽認。
+
+前項規定，於勞務驗收準用之。`},{n:'73-1',t:`機關辦理工程採購之付款及審核程序，除契約另有約定外，應依下列規定辦理：
+
+一、定期估驗或分階段付款者，機關應於廠商提出估驗或階段完成之證明文件後，十五日內完成審核程序，並於接到廠商提出之請款單據後，十五日內付款。
+
+二、驗收付款者，機關應於驗收合格後，填具結算驗收證明文件，並於接到廠商請款單據後，十五日內付款。
+
+三、前二款付款期限，應向上級機關申請核撥補助款者，為三十日。
+
+前項各款所稱日數，係指實際工作日，不包括例假日、特定假日及退請受款人補正之日數。
+
+機關辦理付款及審核程序，如發現廠商有文件不符、不足或有疑義而需補正或澄清者，應一次通知澄清或補正，不得分次辦理。
+
+財物及勞務採購之付款及審核程序，準用前三項之規定。`},{n:'74',t:`廠商與機關間關於招標、審標、決標之爭議，得依本章規定提出異議及申訴。`},{n:'75',t:`廠商對於機關辦理採購，認為違反法令或我國所締結之條約、協定（以下合稱法令），致損害其權利或利益者，得於下列期限內，以書面向招標機關提出異議：
+
+一、對招標文件規定提出異議者，為自公告或邀標之次日起等標期之四分之一，其尾數不足一日者，以一日計。但不得少於十日。
+
+二、對招標文件規定之釋疑、後續說明、變更或補充提出異議者，為接獲機關通知或機關公告之次日起十日。
+
+三、對採購之過程、結果提出異議者，為接獲機關通知或機關公告之次日起十日。其過程或結果未經通知或公告者，為知悉或可得而知悉之次日起十日。但至遲不得逾決標日之次日起十五日。
+
+招標機關應自收受異議之次日起十五日內為適當之處理，並將處理結果以書面通知提出異議之廠商。其處理結果涉及變更或補充招標文件內容者，除選擇性招標之規格標與價格標及限制性招標應以書面通知各廠商外，應另行公告，並視需要延長等標期。`},{n:'76',t:`廠商對於公告金額以上採購異議之處理結果不服，或招標機關逾前條第二項所定期限不為處理者，得於收受異議處理結果或期限屆滿之次日起十五日內，依其屬中央機關或地方機關辦理之採購，以書面分別向主管機關、直轄市或縣（市）政府所設之採購申訴審議委員會申訴。地方政府未設採購申訴審議委員會者，得委請中央主管機關處理。
+
+廠商誤向該管採購申訴審議委員會以外之機關申訴者，以該機關收受之日，視為提起申訴之日。
+
+第二項收受申訴書之機關應於收受之次日起三日內將申訴書移送於該管採購申訴審議委員會，並通知申訴廠商。
+
+爭議屬第三十一條規定不予發還或追繳押標金者，不受第一項公告金額以上之限制。`},{n:'77',t:`申訴應具申訴書，載明下列事項，由申訴廠商簽名或蓋章：
+
+一、申訴廠商之名稱、地址、電話及負責人之姓名、性別、出生年月日、住所或居所。
+
+二、原受理異議之機關。
+
+三、申訴之事實及理由。
+
+四、證據。
+
+五、年、月、日。
+
+申訴得委任代理人為之，代理人應檢附委任書並載明其姓名、性別、出生年月日、職業、電話、住所或居所。
+
+民事訴訟法第七十條規定，於前項情形準用之。`},{n:'78',t:`廠商提出申訴，應同時繕具副本送招標機關。機關應自收受申訴書副本之次日起十日內，以書面向該管採購申訴審議委員會陳述意見。
+
+採購申訴審議委員會應於收受申訴書之次日起四十日內完成審議，並將判斷以書面通知廠商及機關。必要時得延長四十日。`},{n:'79',t:`申訴逾越法定期間或不合法定程式者，不予受理。但其情形可以補正者，應定期間命其補正；逾期不補正者，不予受理。`},{n:'80',t:`採購申訴得僅就書面審議之。
+
+採購申訴審議委員會得依職權或申請，通知申訴廠商、機關到指定場所陳述意見。
+
+採購申訴審議委員會於審議時，得囑託具專門知識經驗之機關、學校、團體或人員鑑定，並得通知相關人士說明或請機關、廠商提供相關文件、資料。
+
+採購申訴審議委員會辦理審議，得先行向廠商收取審議費、鑑定費及其他必要之費用；其收費標準及繳納方式，由主管機關定之。
+
+採購申訴審議規則，由主管機關擬訂，報請行政院核定後發布之。`},{n:'81',t:`申訴提出後，廠商得於審議判斷送達前撤回之。申訴經撤回後，不得再行提出同一之申訴。`},{n:'82',t:`採購申訴審議委員會審議判斷，應以書面附事實及理由，指明招標機關原採購行為有無違反法令之處；其有違反者，並得建議招標機關處置之方式。
+
+採購申訴審議委員會於完成審議前，必要時得通知招標機關暫停採購程序。
+
+採購申訴審議委員會為第一項之建議或前項之通知時，應考量公共利益、相關廠商利益及其他有關情況。`},{n:'83',t:`審議判斷，視同訴願決定。`},{n:'84',t:`廠商提出異議或申訴者，招標機關評估其事由，認其異議或申訴有理由者，應自行撤銷、變更原處理結果，或暫停採購程序之進行。但為應緊急情況或公共利益之必要，或其事由無影響採購之虞者，不在此限。
+
+依廠商之申訴，而為前項之處理者，招標機關應將其結果即時通知該管採購申訴審議委員會。`},{n:'85',t:`審議判斷指明原採購行為違反法令者，招標機關應自收受審議判斷書之次日起二十日內另為適法之處置；期限屆滿未處置者，廠商得自期限屆滿之次日起十五日內向採購申訴審議委員會申訴。
+
+採購申訴審議委員會於審議判斷中建議招標機關處置方式，而招標機關不依建議辦理者，應於收受判斷之次日起十五日內報請上級機關核定，並由上級機關於收受之次日起十五日內，以書面向採購申訴審議委員會及廠商說明理由。
+
+審議判斷指明原採購行為違反法令，廠商得向招標機關請求償付其準備投標、異議及申訴所支出之必要費用。`},{n:'85-1',t:`機關與廠商因履約爭議未能達成協議者，得以下列方式之一處理：
+
+一、向採購申訴審議委員會申請調解。
+
+二、向仲裁機構提付仲裁。
+
+前項調解屬廠商申請者，機關不得拒絕。工程及技術服務採購之調解，採購申訴審議委員會應提出調解建議或調解方案；其因機關不同意致調解不成立者，廠商提付仲裁，機關不得拒絕。
+
+採購申訴審議委員會辦理調解之程序及其效力，除本法有特別規定者外，準用民事訴訟法有關調解之規定。
+
+履約爭議調解規則，由主管機關擬訂，報請行政院核定後發布之。`},{n:'85-2',t:`申請調解，應繳納調解費、鑑定費及其他必要之費用；其收費標準、繳納方式及數額之負擔，由主管機關定之。`},{n:'85-3',t:`調解經當事人合意而成立；當事人不能合意者，調解不成立。
+
+調解過程中，調解委員得依職權以採購申訴審議委員會名義提出書面調解建議；機關不同意該建議者，應先報請上級機關核定，並以書面向採購申訴審議委員會及廠商說明理由。`},{n:'85-4',t:`履約爭議之調解，當事人不能合意但已甚接近者，採購申訴審議委員會應斟酌一切情形，並徵詢調解委員之意見，求兩造利益之平衡，於不違反兩造當事人之主要意思範圍內，以職權提出調解方案。
+
+當事人或參加調解之利害關係人對於前項方案，得於送達之次日起十日內，向採購申訴審議委員會提出異議。
+
+於前項期間內提出異議者，視為調解不成立；其未於前項期間內提出異議者，視為已依該方案調解成立。
+
+機關依前項規定提出異議者，準用前條第二項之規定。`},{n:'86',t:`主管機關及直轄市、縣（市）政府為處理中央及地方機關採購之廠商申訴及機關與廠商間之履約爭議調解，分別設採購申訴審議委員會；置委員七人至三十五人，由主管機關及直轄市、縣（市）政府聘請具有法律或採購相關專門知識之公正人士擔任，其中三人並得由主管機關及直轄市、縣（市）政府高級人員派兼之。但派兼人數不得超過全體委員人數五分之一。
+
+採購申訴審議委員會應公正行使職權。採購申訴審議委員會組織準則，由主管機關擬訂，報請行政院核定後發布之。`},{n:'87',t:`意圖使廠商不為投標、違反其本意投標，或使得標廠商放棄得標、得標後轉包或分包，而施強暴、脅迫、藥劑或催眠術者，處一年以上七年以下有期徒刑，得併科新臺幣三百萬元以下罰金。
+
+犯前項之罪，因而致人於死者，處無期徒刑或七年以上有期徒刑；致重傷者，處三年以上十年以下有期徒刑，各得併科新臺幣三百萬元以下罰金。
+
+以詐術或其他非法之方法，使廠商無法投標或開標發生不正確結果者，處五年以下有期徒刑，得併科新臺幣一百萬元以下罰金。
+
+意圖影響決標價格或獲取不當利益，而以契約、協議或其他方式之合意，使廠商不為投標或不為價格之競爭者，處六月以上五年以下有期徒刑，得併科新臺幣一百萬元以下罰金。
+
+意圖影響採購結果或獲取不當利益，而借用他人名義或證件投標者，處三年以下有期徒刑，得併科新臺幣一百萬元以下罰金。容許他人借用本人名義或證件參加投標者，亦同。
+
+第一項、第三項及第四項之未遂犯罰之。`},{n:'88',t:`受機關委託提供採購規劃、設計、審查、監造、專案管理或代辦採購廠商之人員，意圖為私人不法之利益，對技術、工法、材料、設備或規格，為違反法令之限制或審查，因而獲得利益者，處一年以上七年以下有期徒刑，得併科新臺幣三百萬元以下罰金。其意圖為私人不法之利益，對廠商或分包廠商之資格為違反法令之限制或審查，因而獲得利益者，亦同。
+
+前項之未遂犯罰之。`},{n:'89',t:`受機關委託提供採購規劃、設計或專案管理或代辦採購廠商之人員，意圖為私人不法之利益，洩漏或交付關於採購應秘密之文書、圖畫、消息、物品或其他資訊，因而獲得利益者，處五年以下有期徒刑、拘役或科或併科新臺幣一百萬元以下罰金。
+
+前項之未遂犯罰之。`},{n:'90',t:`意圖使機關規劃、設計、承辦、監辦採購人員或受機關委託提供採購規劃、設計或專案管理或代辦採購廠商之人員，就與採購有關事項，不為決定或為違反其本意之決定，而施強暴、脅迫者，處一年以上七年以下有期徒刑，得併科新臺幣三百萬元以下罰金。
+
+犯前項之罪，因而致人於死者，處無期徒刑或七年以上有期徒刑；致重傷者，處三年以上十年以下有期徒刑，各得併科新臺幣三百萬元以下罰金。
+
+第一項之未遂犯罰之。`},{n:'91',t:`意圖使機關規劃、設計、承辦、監辦採購人員或受機關委託提供採購規劃、設計或專案管理或代辦採購廠商之人員，洩漏或交付關於採購應秘密之文書、圖畫、消息、物品或其他資訊，而施強暴、脅迫者，處五年以下有期徒刑，得併科新臺幣一百萬元以下罰金。
+
+犯前項之罪，因而致人於死者，處無期徒刑或七年以上有期徒刑；致重傷者，處三年以上十年以下有期徒刑，各得併科新臺幣一百萬元以下罰金。
+
+第一項之未遂犯罰之。`},{n:'92',t:`廠商之代表人、代理人、受雇人或其他從業人員，因執行業務犯本法之罪者，除依該條規定處罰其行為人外，對該廠商亦科以該條之罰金。`},{n:'93',t:`各機關得就具有共通需求特性之財物或勞務，與廠商簽訂共同供應契約。
+
+共同供應契約之採購，其招標文件與契約應記載之事項、適用機關及其他相關事項之辦法，由主管機關另定之。`},{n:'93-1',t:`機關辦理採購，得以電子化方式為之，其電子化資料並視同正式文件，得免另備書面文件。
+
+前項以電子化方式採購之招標、領標、投標、開標、決標及費用收支作業辦法，由主管機關定之。`},{n:'94',t:`機關辦理評選，應成立五人以上之評選委員會，專家學者人數不得少於三分之一，其名單由主管機關會同教育部、考選部及其他相關機關建議之。
+
+前項所稱專家學者，不得為政府機關之現職人員。
+
+評選委員會組織準則及審議規則，由主管機關定之。`},{n:'95',t:`機關辦理採購宜由採購專業人員為之。但一定金額之採購，應由採購專業人員為之。
+
+前項採購專業人員之資格、考試、訓練、發證、管理辦法及一定金額，由主管機關會商相關機關定之。`},{n:'96',t:`機關得於招標文件中，規定優先採購取得政府認可之環境保護標章使用許可，而其效能相同或相似之產品，並得允許百分之十以下之價差。產品或其原料之製造、使用過程及廢棄物處理，符合再生材質、可回收、低污染或省能源者，亦同。
+
+其他增加社會利益或減少社會成本，而效能相同或相似之產品，準用前項之規定。
+
+前二項產品之種類、範圍及實施辦法，由主管機關會同行政院環境保護署及相關目的事業主管機關定之。`},{n:'97',t:`主管機關得參酌相關法令規定採取措施，扶助中小企業承包或分包一定金額比例以上之政府採購。
+
+前項扶助辦法，由主管機關定之。`},{n:'98',t:`得標廠商其於國內員工總人數逾一百人者，應於履約期間僱用身心障礙者及原住民，人數不得低於總人數百分之二，僱用不足者，除應繳納代金，並不得僱用外籍勞工取代僱用不足額部分。`},{n:'99',t:`機關辦理政府規劃或核准之交通、能源、環保、旅遊等建設，經目的事業主管機關核准開放廠商投資興建、營運者，其甄選投資廠商之程序，除其他法律另有規定者外，適用本法之規定。`},{n:'100',t:`主管機關、上級機關及主計機關得隨時查核各機關採購進度、存貨或其使用狀況，亦得命其提出報告。
+
+機關多餘不用之堪用財物，得無償讓與其他政府機關或公立學校。`},{n:'101',t:`機關辦理採購，發現廠商有下列情形之一，應將其事實、理由及依第一百零三條第一項所定期間通知廠商，並附記如未提出異議者，將刊登政府採購公報：
+
+一、容許他人借用本人名義或證件參加投標者。
+
+二、借用或冒用他人名義或證件投標者。
+
+三、擅自減省工料，情節重大者。
+
+四、以虛偽不實之文件投標、訂約或履約，情節重大者。
+
+五、受停業處分期間仍參加投標者。
+
+六、犯第八十七條至第九十二條之罪，經第一審為有罪判決者。
+
+七、得標後無正當理由而不訂約者。
+
+八、查驗或驗收不合格，情節重大者。
+
+九、驗收後不履行保固責任，情節重大者。
+
+十、因可歸責於廠商之事由，致延誤履約期限，情節重大者。
+
+十一、違反第六十五條規定轉包者。
+
+十二、因可歸責於廠商之事由，致解除或終止契約，情節重大者。
+
+十三、破產程序中之廠商。
+
+十四、歧視性別、原住民、身心障礙或弱勢團體人士，情節重大者。
+
+十五、對採購有關人員行求、期約或交付不正利益者。
+
+廠商之履約連帶保證廠商經機關通知履行連帶保證責任者，適用前項規定。
+
+機關為第一項通知前，應給予廠商口頭或書面陳述意見之機會，機關並應成立採購工作及審查小組認定廠商是否該當第一項各款情形之一。
+
+機關審酌第一項所定情節重大，應考量機關所受損害之輕重、廠商可歸責之程度、廠商之實際補救或賠償措施等情形。`},{n:'102',t:`廠商對於機關依前條所為之通知，認為違反本法或不實者，得於接獲通知之次日起二十日內，以書面向該機關提出異議。
+
+廠商對前項異議之處理結果不服，或機關逾收受異議之次日起十五日內不為處理者，無論該案件是否逾公告金額，得於收受異議處理結果或期限屆滿之次日起十五日內，以書面向該管採購申訴審議委員會申訴。
+
+機關依前條通知廠商後，廠商未於規定期限內提出異議或申訴，或經提出申訴結果不予受理或審議結果指明不違反本法或並無不實者，機關應即將廠商名稱及相關情形刊登政府採購公報。
+
+第一項及第二項關於異議及申訴之處理，準用第六章之規定。`},{n:'103',t:`依前條第三項規定刊登於政府採購公報之廠商，於下列期間內，不得參加投標或作為決標對象或分包廠商：
+
+一、有第一百零一條第一項第一款至第五款、第十五款情形或第六款判處有期徒刑者，自刊登之次日起三年。但經判決撤銷原處分或無罪確定者，應註銷之。
+
+二、有第一百零一條第一項第十三款、第十四款情形或第六款判處拘役、罰金或緩刑者，自刊登之次日起一年。但經判決撤銷原處分或無罪確定者，應註銷之。
+
+三、有第一百零一條第一項第七款至第十二款情形者，於通知日起前五年內未被任一機關刊登者，自刊登之次日起三個月；已被任一機關刊登一次者，自刊登之次日起六個月；已被任一機關刊登累計二次以上者，自刊登之次日起一年。但經判決撤銷原處分者，應註銷之。
+
+機關因特殊需要，而有向前項廠商採購之必要，經上級機關核准者，不適用前項規定。
+
+本法中華民國一百零八年四月三十日修正之條文施行前，已依第一百零一條第一項規定通知，但處分尚未確定者，適用修正後之規定。`},{n:'104',t:`軍事機關之採購，應依本法之規定辦理。但武器、彈藥、作戰物資或與國家安全或國防目的有關之採購，而有下列情形者，不在此限。
+
+一、因應國家面臨戰爭、戰備動員或發生戰爭者，得不適用本法之規定。
+
+二、機密或極機密之採購，得不適用第二十七條、第四十五條及第六十一條之規定。
+
+三、確因時效緊急，有危及重大戰備任務之虞者，得不適用第二十六條、第二十八條及第三十六條之規定。
+
+四、以議價方式辦理之採購，得不適用第二十六條第三項本文之規定。
+
+前項採購之適用範圍及其處理辦法，由主管機關會同國防部定之，並送立法院審議。`},{n:'105',t:`機關辦理下列採購，得不適用本法招標、決標之規定。
+
+一、國家遇有戰爭、天然災害、癘疫或財政經濟上有重大變故，需緊急處置之採購事項。
+
+二、人民之生命、身體、健康、財產遭遇緊急危難，需緊急處置之採購事項。
+
+三、公務機關間財物或勞務之取得，經雙方直屬上級機關核准者。
+
+四、依條約或協定向國際組織、外國政府或其授權機構辦理之採購，其招標、決標另有特別規定者。
+
+前項之採購，有另定處理辦法予以規範之必要者，其辦法由主管機關定之。`},{n:'106',t:`駐國外機構辦理或受託辦理之採購，因應駐在地國情或實地作業限制，且不違背我國締結之條約或協定者，得不適用下列各款規定。但第二款至第四款之事項，應於招標文件中明定其處理方式。
+
+一、第二十七條刊登政府採購公報。
+
+二、第三十條押標金及保證金。
+
+三、第五十三條第一項及第五十四條第一項優先減價及比減價格規定。
+
+四、第六章異議及申訴。
+
+前項採購屬查核金額以上者，事後應敘明原由，檢附相關文件送上級機關備查。`},{n:'107',t:`機關辦理採購之文件，除依會計法或其他法律規定保存者外，應另備具一份，保存於主管機關指定之場所。`},{n:'108',t:`中央及直轄市、縣（市）政府應成立採購稽核小組，稽核監督採購事宜。
+
+前項稽核小組之組織準則及作業規則，由主管機關擬訂，報請行政院核定後發布之。`},{n:'109',t:`機關辦理採購，審計機關得隨時稽察之。`},{n:'110',t:`主計官、審計官或檢察官就採購事件，得為機關提起訴訟、參加訴訟或上訴。`},{n:'111',t:`機關辦理巨額採購，應於使用期間內，逐年向主管機關提報使用情形及其效益分析。主管機關並得派員查核之。
+
+主管機關每年應對已完成之重大採購事件，作出效益評估；除應秘密者外，應刊登於政府採購公報。`},{n:'112',t:`主管機關應訂定採購人員倫理準則。`},{n:'113',t:`本法施行細則，由主管機關定之。`},{n:'114',t:`本法自公布後一年施行。
+
+本法修正條文（包括中華民國九十年一月十日修正公布之第七條）自公布日施行。`},]
+};
+
+// ===== STATE =====
+const S1={att:0,cor:0,tc:0,cc:0,cur:null,pool:null};
+const S2={qz:[],idx:0,wrongs:[],blanks:[],ab:-1,tot:0,hit:0};
+let kwN=1;
+const EL='law_err_v1';
+const TM={rem:0,iv:null,ovt1:0,ovt2:0};
+
+// ===== UTILS =====
+function eh(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function eb(s){return s.replace(/\n/g,'<br>').replace(/ /g,'&nbsp;');}
+function eid(id){return document.getElementById(id);}
+
+// ===== TAB =====
+function ST(id){
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  eid(id).classList.add('on');
+  document.querySelector(`.tb[onclick="ST('${id}')"]`).classList.add('on');
+  tmrStop();
+  if(id==='t3')updT3();
+  if(id==='t4'){rendLog();rendStar();rendNotes();}
+  if(id==='t5')initT5Chks();
+  if(id==='t6')initT6();
+}
+
+// ===== TAB 1 =====
+function initT1(){
+  const f=eid('lf');
+  Object.keys(LAWS).forEach(l=>{
+    const lb=document.createElement('label');
+    lb.className='lc';
+    lb.innerHTML=`<input type="checkbox" checked value="${l}"> ${l}`;
+    f.appendChild(lb);
+  });
+  updT1S();
+}
+
+function selLaws(){return[...document.querySelectorAll('#lf input:checked')].map(i=>i.value);}
+
+function draw(){
+  const sel=selLaws();
+  if(!sel.length){alert('請至少選擇一部法規');return;}
+  let pool=S1.pool;
+  if(!pool){
+    pool=[];
+    sel.forEach(l=>LAWS[l].forEach(a=>pool.push({l,a})));
+  }else{
+    pool=pool.filter(x=>sel.includes(x.l));
+  }
+  if(!pool.length){alert('所選法規無可用條文');return;}
+  const it=pool[Math.floor(Math.random()*pool.length)];
+  S1.cur=it;S1.pool=null;
+  eid('albl').textContent=`${it.l} 第${it.a.n}條`;
+  const sb1=eid('sb1');sb1.style.display='inline';sb1.textContent=isStarred(it.l,it.a.n)?'★':'☆';
+  eid('t1nb_btn').textContent=hasNote(it.l,it.a.n)?'📝 已有筆記':'📝 筆記';
+  eid('t1np').style.display='none';
+  eid('t1in').value='';
+  eid('t1hint').style.display='none';
+  eid('t1art').style.display='block';
+  eid('t1res').style.display='none';
+  if(eid('t1tc').checked)tmrStart('t1'); else tmrStop();
+}
+
+function chk(){
+  if(!S1.cur)return;
+  tmrStop();
+  const u=eid('t1in').value;
+  const c=S1.cur.a.t;
+  S1.att++;
+  let html='',cc=0;
+  for(let i=0;i<c.length;i++){
+    const ch=c[i],uc=u[i]||'';
+    if(ch===uc){html+=`<span class="ok">${eh(ch)=='\n'?'<br>':eh(ch)}</span>`;cc++;}
+    else{html+=`<span class="err">${eh(ch)=='\n'?'↵<br>':eh(ch)}</span>`;}
+  }
+  if(u.length>c.length){
+    for(let i=c.length;i<u.length;i++)html+=`<span class="err" style="background:#F5DCD3">${eh(u[i])}</span>`;
+  }
+  S1.tc+=c.length;S1.cc+=cc;
+  const pct=Math.round(100*cc/c.length);
+  if(pct>=90)S1.cor++;
+  eid('t1cr').innerHTML=html;
+  eid('t1res').style.display='block';
+  eid('t1sb').innerHTML=`<div class="si">本次正確率：${pct}%</div><div class="si">正確字數：${cc}/${c.length}</div><div class="si">${pct>=90?'✅ 九成達標':'❌ 未達九成'}</div>`;
+  if(pct<90){
+    const d=buildDiff(u,c);
+    eid('t1d1').innerHTML=d.h1;
+    eid('t1d2').innerHTML=d.h2;
+    eid('t1dcnt').textContent=`共差異 ${d.cnt} 處`;
+    eid('t1diff').style.display='block';
+  } else {
+    eid('t1diff').style.display='none';
+  }
+  updT1S();
+}
+
+function showan(){
+  if(!S1.cur)return;
+  const h=eid('t1hint');
+  h.textContent=S1.cur.a.t;
+  h.style.display='block';
+}
+
+function updT1S(){
+  const pct=S1.tc?Math.round(100*S1.cc/S1.tc):0;
+  const ovtHtml=TM.ovt1?`<div class="si">⏰ 超時：${TM.ovt1}次</div>`:'';
+  eid('t1ts').innerHTML=`<div class="si">練習次數：${S1.att}</div><div class="si">九成達標：${S1.cor}/${S1.att}</div><div class="si">累計正確率：${pct}%</div>${ovtHtml}`;
+}
+
+// ===== TAB 2 =====
+function addKR(){
+  const c=eid('t2kw');
+  const d=document.createElement('div');
+  d.className='kr';d.id=`kr${kwN}`;
+  d.innerHTML=`<input type="text" placeholder="關鍵字" class="kw" style="width:110px"><input type="text" placeholder="選項A" class="ko" style="width:70px"><input type="text" placeholder="選項B" class="ko" style="width:70px"><input type="text" placeholder="選項C（可選）" class="ko" style="width:95px"><input type="text" placeholder="選項D（可選）" class="ko" style="width:95px"><button class="btn bd" style="padding:4px 8px" onclick="this.parentElement.remove()">刪除</button>`;
+  c.appendChild(d);kwN++;
+}
+
+function startQ(){
+  const ln=eid('t2sel').value;
+  const kws=[];
+  document.querySelectorAll('.kr').forEach(r=>{
+    const w=r.querySelector('.kw').value.trim();
+    const opts=[...r.querySelectorAll('.ko')].map(o=>o.value.trim()).filter(o=>o);
+    if(w&&opts.length>=2)kws.push({w,opts});
+  });
+  if(!kws.length){alert('請輸入至少一組關鍵字（需關鍵字和至少兩個選項）');return;}
+  const arts=LAWS[ln];
+  const qz=arts.filter(a=>kws.some(k=>a.t.includes(k.w))).map(a=>({l:ln,a,kws:kws.filter(k=>a.t.includes(k.w))}));
+  if(!qz.length){alert('找不到包含指定關鍵字的條文');return;}
+  S2.qz=qz;S2.idx=0;S2.wrongs=[];S2.tot=0;S2.hit=0;
+  TM.ovt2=0;
+  eid('t2s').style.display='none';eid('t2q').style.display='block';eid('t2d').style.display='none';
+  rendQ();
+}
+
+function rendQ(){
+  const q=S2.qz[S2.idx];
+  eid('t2prog').textContent=`第 ${S2.idx+1} / ${S2.qz.length} 題 — ${q.l} 第${q.a.n}條`;
+  eid('sb2').textContent=isStarred(q.l,q.a.n)?'★':'☆';
+  eid('t2nb_note').textContent=hasNote(q.l,q.a.n)?'📝 已有筆記':'📝 筆記';
+  eid('t2np').style.display='none';
+  const text=q.a.t;
+  const blanks=[];
+  q.kws.forEach(k=>{
+    let i=0;
+    while((i=text.indexOf(k.w,i))!==-1){blanks.push({pos:i,len:k.w.length,kw:k.w,opts:k.opts,ans:null,ok:null});i+=k.w.length;}
+  });
+  blanks.sort((a,b)=>a.pos-b.pos);
+  // Remove overlapping blanks
+  const cleaned=[];
+  let last=-1;
+  blanks.forEach(b=>{if(b.pos>=last){cleaned.push(b);last=b.pos+b.len;}});
+  S2.blanks=cleaned;S2.ab=cleaned.length>0?0:-1;
+  let html='',li=0;
+  cleaned.forEach((b,bi)=>{
+    html+=eh(text.slice(li,b.pos)).replace(/\n/g,'<br>');
+    html+=`<button class="bb" id="bb${bi}" onclick="selB(${bi})">[　空格${bi+1}　]</button>`;
+    li=b.pos+b.len;
+  });
+  html+=eh(text.slice(li)).replace(/\n/g,'<br>');
+  eid('t2qc').innerHTML=html;
+  eid('t2nb').style.display='none';
+  if(cleaned.length>0){hlB();rendOpts();}
+  else{eid('t2oa').innerHTML='';eid('t2nb').style.display='block';}
+  updT2S();
+  if(eid('t2tc').checked)tmrStart('t2'); else tmrStop();
+}
+
+function selB(bi){
+  if(S2.blanks[bi].ans!==null)return;
+  S2.ab=bi;hlB();rendOpts();
+}
+
+function hlB(){
+  document.querySelectorAll('.bb').forEach((b,i)=>{
+    b.style.outline=(i===S2.ab&&S2.blanks[i].ans===null)?'2px solid #E07B39':'none';
+  });
+}
+
+function rendOpts(){
+  const ai=S2.ab;
+  if(ai<0||ai>=S2.blanks.length)return;
+  const b=S2.blanks[ai];
+  if(b.ans!==null){
+    const nx=S2.blanks.findIndex((x,i)=>i>ai&&x.ans===null);
+    if(nx>=0){S2.ab=nx;rendOpts();}
+    return;
+  }
+  eid('t2oa').innerHTML=`<span style="font-size:13px;color:#795548;align-self:center">空格${ai+1}：</span>`+
+    b.opts.map((o,oi)=>`<button class="ob" onclick="fillB(${oi})">${eh(o)}</button>`).join('');
+}
+
+function fillB(oi){
+  const ai=S2.ab;if(ai<0)return;
+  const b=S2.blanks[ai];if(b.ans!==null)return;
+  const opt=b.opts[oi];
+  b.ans=opt;b.ok=(opt===b.kw);
+  const btn=eid(`bb${ai}`);
+  btn.textContent=b.ok?opt:`${opt}（正確：${b.kw}）`;
+  btn.classList.add(b.ok?'ok':'err');
+  S2.tot++;if(b.ok)S2.hit++;
+  if(!b.ok){
+    const q=S2.qz[S2.idx];
+    saveErr(q.l,q.a.n,b.kw);
+  }
+  const nx=S2.blanks.findIndex((x,i)=>i>ai&&x.ans===null);
+  if(nx>=0){S2.ab=nx;hlB();rendOpts();}
+  else{
+    eid('t2oa').innerHTML='';
+    eid('t2nb').style.display='block';
+    if(S2.blanks.some(x=>!x.ok)){
+      S2.wrongs.push({q:S2.qz[S2.idx],blanks:S2.blanks.map(x=>({...x}))});
+    }
+  }
+  updT2S();
+}
+
+function nextQ(){S2.idx++;eid('t2nb').style.display='none';if(S2.idx>=S2.qz.length)endQ();else rendQ();}
+
+function endQ(){
+  tmrStop();
+  eid('t2q').style.display='none';eid('t2d').style.display='block';
+  const pct=S2.tot?Math.round(100*S2.hit/S2.tot):0;
+  const ovtHtml=TM.ovt2?`<br>⏰ 超時題數：${TM.ovt2} 題`:'';
+  eid('t2fs').innerHTML=`正確率：<strong>${pct}%</strong><br>正確空格：${S2.hit} / ${S2.tot}<br>錯誤題數：${S2.wrongs.length} 題${ovtHtml}`;
+}
+
+function rstQ(){tmrStop();eid('t2s').style.display='block';eid('t2q').style.display='none';eid('t2d').style.display='none';}
+
+function updT2S(){
+  const pct=S2.tot?Math.round(100*S2.hit/S2.tot):'-';
+  eid('t2sc').textContent=`正確率：${pct}% (${S2.hit}/${S2.tot})`;
+}
+
+// ===== TAB 3 =====
+function updT3(){
+  const rb=eid('t3rb');
+  if(!S2.wrongs.length){
+    eid('t3c').innerHTML='<p style="color:#9C8778">尚未有錯題，請先完成挖空選擇題。</p>';
+    rb.style.display='none';return;
+  }
+  rb.style.display='block';
+  let html='';
+  S2.wrongs.forEach((w,wi)=>{
+    html+=`<div class="ee"><div style="display:flex;justify-content:space-between;align-items:center"><strong>${w.q.l} 第${w.q.a.n}條</strong><span class="eb" onclick="togD('d${wi}')">展開 ▼</span></div><div id="d${wi}" class="ed">`;
+    w.blanks.filter(b=>!b.ok).forEach(b=>{
+      html+=`<div style="margin:5px 0;font-size:14px"><span class="err">你的答案：${eh(b.ans||'（未作答）')}</span> → <span class="ok">正確：${eh(b.kw)}</span></div>`;
+    });
+    html+=`<div style="margin-top:8px;font-size:13px;color:#795548;background:#F5EBE0;padding:8px;border-radius:4px;white-space:pre-wrap">${eh(w.q.a.t)}</div></div></div>`;
+  });
+  eid('t3c').innerHTML=html;
+}
+
+function togD(id){eid(id).classList.toggle('show');}
+
+function rePrac(){
+  if(!S2.wrongs.length)return;
+  S2.qz=S2.wrongs.map(w=>w.q);
+  S2.idx=0;S2.wrongs=[];S2.tot=0;S2.hit=0;
+  eid('t2s').style.display='none';eid('t2q').style.display='block';eid('t2d').style.display='none';
+  ST('t2');rendQ();
+}
+
+// ===== TAB 4 =====
+function saveErr(l,n,kw){
+  const log=JSON.parse(localStorage.getItem(EL)||'{}');
+  const k=`${l}|${n}|${kw}`;
+  if(!log[k])log[k]={l,n,kw,cnt:0,dt:''};
+  log[k].cnt++;log[k].dt=new Date().toLocaleDateString('zh-TW');
+  localStorage.setItem(EL,JSON.stringify(log));
+}
+
+function rendLog(){
+  const log=JSON.parse(localStorage.getItem(EL)||'{}');
+  const ents=Object.values(log).sort((a,b)=>b.cnt-a.cnt);
+  if(!ents.length){eid('t4c').innerHTML='<p style="color:#9C8778">暫無錯題記錄。</p>';return;}
+  eid('t4c').innerHTML=ents.map(e=>`<div class="ee"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><div><strong>${e.l}</strong> 第${e.n}條 <span style="color:#795548;font-size:13px">關鍵字：${eh(e.kw)}</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9C8778">${e.dt}</span><span class="cb">錯 ${e.cnt} 次</span></div></div></div>`).join('');
+}
+
+function clrLog(){
+  if(!confirm('確定清除所有錯題記錄？'))return;
+  localStorage.removeItem(EL);rendLog();
+}
+
+function pracLog(){
+  const log=JSON.parse(localStorage.getItem(EL)||'{}');
+  const ents=Object.values(log);
+  if(!ents.length){alert('暫無錯題記錄');return;}
+  const pool=ents.map(e=>({l:e.l,a:LAWS[e.l]?.find(a=>a.n===e.n)})).filter(x=>x.a);
+  if(!pool.length){alert('找不到對應條文');return;}
+  S1.pool=pool;
+  ST('t1');
+  S1.cur=null;
+  eid('t1art').style.display='none';
+  eid('t1res').style.display='none';
+  alert(`已載入 ${pool.length} 條錯題，請點擊「抽題」開始練習。`);
+}
+
+// ===== DIFF =====
+function buildDiff(u,c){
+  const maxLen=Math.max(u.length,c.length);
+  let h1='',h2='',cnt=0;
+  for(let i=0;i<maxLen;i++){
+    const cu=i<u.length?u[i]:null;
+    const cc=i<c.length?c[i]:null;
+    if(cu===cc){
+      if(cc==='\n'){h1+='<br>';h2+='<br>';}
+      else{h1+=`<span class="dc-ok">${eh(cu)}</span>`;h2+=eh(cc);}
+    } else {
+      // Count diff: skip spaces and newlines in correct answer
+      if(cc!==null&&cc!==' '&&cc!=='\n')cnt++;
+      // Line 1: user's answer
+      if(cu===null){
+        // Missing char
+        if(cc==='\n'){h1+='<br>';}
+        else{h1+='<span class="dc-miss">&thinsp;</span>';}
+      } else if(cu==='\n'){
+        h1+='<br>';
+      } else {
+        h1+=`<span class="dc-wrong">${eh(cu)}</span>`;
+        if(cc==='\n')h1+='<br>';
+      }
+      // Line 2: correct answer
+      if(cc===null){
+        // Extra char typed by user — nothing in line 2
+      } else if(cc==='\n'){
+        h2+='<br>';
+      } else {
+        h2+=`<mark class="hl">${eh(cc)}</mark>`;
+      }
+    }
+  }
+  return{h1,h2,cnt};
+}
+
+// ===== TIMER =====
+function tmrToggle1(){
+  const on=eid('t1tc').checked;
+  eid('t1tsec_wrap').style.display=on?'flex':'none';
+  if(!on){tmrStop();eid('tmr1').style.display='none';}
+}
+function tmrToggle2(){
+  const on=eid('t2tc').checked;
+  eid('t2tsec_wrap').style.display=on?'flex':'none';
+  if(!on){tmrStop();eid('tmr2').style.display='none';}
+}
+function tmrStop(){
+  if(TM.iv)clearInterval(TM.iv);
+  TM.iv=null;
+}
+function tmrStart(mode){
+  tmrStop();
+  const sec=parseInt(mode==='t1'?eid('t1tsec').value:eid('t2tsec').value)||30;
+  TM.rem=sec;
+  const el=eid(mode==='t1'?'tmr1':'tmr2');
+  el.style.display='inline-block';
+  el.textContent=sec+'s';
+  el.className='tmr';
+  TM.iv=setInterval(()=>{
+    TM.rem--;
+    el.textContent=TM.rem+'s';
+    if(TM.rem<=10)el.className='tmr warn';
+    if(TM.rem<=0){
+      tmrStop();
+      el.textContent='⏰';
+      if(mode==='t1')tmrExpT1(); else tmrExpT2();
+    }
+  },1000);
+}
+function tmrExpT1(){
+  TM.ovt1++;
+  S1.att++;
+  showan();
+  eid('t1cr').innerHTML='<span style="color:#C0614A;font-size:16px;font-weight:bold">⏰ 時間到！</span>';
+  eid('t1diff').style.display='none';
+  eid('t1sb').innerHTML=`<div class="si">⏰ 超時未作答</div>`;
+  eid('t1res').style.display='block';
+  updT1S();
+}
+function tmrExpT2(){
+  TM.ovt2++;
+  const q=S2.qz[S2.idx];
+  S2.blanks.forEach((b,i)=>{
+    if(b.ans===null){
+      b.ans='（超時）';b.ok=false;
+      const btn=eid(`bb${i}`);
+      if(btn){btn.textContent=`超時（正確：${b.kw}）`;btn.classList.add('err');}
+      S2.tot++;
+      saveErr(q.l,q.a.n,b.kw);
+    }
+  });
+  if(S2.blanks.some(x=>!x.ok)){
+    S2.wrongs.push({q,blanks:S2.blanks.map(x=>({...x}))});
+  }
+  eid('t2oa').innerHTML='<span style="color:#C0614A;font-weight:bold">⏰ 時間到！自動跳下一題…</span>';
+  updT2S();
+  setTimeout(()=>{if(S2.idx+1>=S2.qz.length)endQ();else nextQ();},1800);
+}
+
+// ===== NOTES =====
+const NL='law_note_v1';
+function getNotes(){return JSON.parse(localStorage.getItem(NL)||'{}');}
+function setNotes(o){localStorage.setItem(NL,JSON.stringify(o));}
+function noteKey(l,n){return `${l}|${n}`;}
+function hasNote(l,n){return !!(getNotes()[noteKey(l,n)]||{}).text;}
+
+function togNoteT1(){
+  if(!S1.cur)return;
+  const {l,a}=S1.cur;
+  const np=eid('t1np');
+  if(np.style.display==='block'){np.style.display='none';return;}
+  const note=getNotes()[noteKey(l,a.n)]||{};
+  eid('t1nta').value=note.text||'';
+  np.style.display='block';
+}
+function saveNoteT1(){
+  if(!S1.cur)return;
+  const {l,a}=S1.cur;
+  const text=eid('t1nta').value.trim();
+  const notes=getNotes(),k=noteKey(l,a.n);
+  if(text){notes[k]={l,n:a.n,text,dt:new Date().toLocaleDateString('zh-TW')};}
+  else{delete notes[k];}
+  setNotes(notes);
+  eid('t1nb_btn').textContent=text?'📝 已有筆記':'📝 筆記';
+  eid('t1np').style.display='none';
+}
+function togNoteT2(){
+  if(!S2.qz.length)return;
+  const q=S2.qz[S2.idx];
+  const np=eid('t2np');
+  if(np.style.display==='block'){np.style.display='none';return;}
+  const note=getNotes()[noteKey(q.l,q.a.n)]||{};
+  eid('t2nta').value=note.text||'';
+  np.style.display='block';
+}
+function saveNoteT2(){
+  if(!S2.qz.length)return;
+  const q=S2.qz[S2.idx];
+  const text=eid('t2nta').value.trim();
+  const notes=getNotes(),k=noteKey(q.l,q.a.n);
+  if(text){notes[k]={l:q.l,n:q.a.n,text,dt:new Date().toLocaleDateString('zh-TW')};}
+  else{delete notes[k];}
+  setNotes(notes);
+  eid('t2nb_note').textContent=text?'📝 已有筆記':'📝 筆記';
+  eid('t2np').style.display='none';
+}
+function rendNotes(){
+  const notes=getNotes();
+  const ents=Object.values(notes).filter(x=>x&&x.text);
+  if(!ents.length){eid('t4notes').innerHTML='<p style="color:#9C8778">尚無筆記。</p>';return;}
+  window._noteEnts=ents;
+  eid('t4notes').innerHTML=ents.map((e,i)=>`<div class="ee"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px"><div><strong>${e.l}</strong> 第${e.n}條 <span style="font-size:12px;color:#9C8778">${e.dt||''}</span></div><div style="display:flex;gap:6px"><button class="note-btn" onclick="editNote4(${i})">編輯</button><button class="note-btn" style="color:#C0614A" onclick="delNote4('${e.l}','${e.n}')">刪除</button></div></div><div style="margin-top:6px;font-size:14px;color:#795548;background:#FFF3DF;padding:8px;border-radius:4px;white-space:pre-wrap" id="ne_txt${i}">${eh(e.text)}</div></div>`).join('');
+}
+function editNote4(i){
+  const e=window._noteEnts[i];
+  eid(`ne_txt${i}`).innerHTML=`<textarea style="min-height:70px;margin-bottom:6px;background:#FFF3DF;border:1px solid #E8C9A0;width:100%;box-sizing:border-box" id="ne_ta${i}">${eh(e.text)}</textarea><div style="display:flex;gap:8px"><button class="btn bs" style="font-size:13px;padding:4px 10px" onclick="saveNote4('${e.l}','${e.n}',${i})">儲存</button><button class="btn bg" style="font-size:13px;padding:4px 10px" onclick="rendNotes()">取消</button></div>`;
+}
+function saveNote4(l,n,i){
+  const text=eid(`ne_ta${i}`).value.trim();
+  const notes=getNotes(),k=noteKey(l,n);
+  if(text){notes[k]={...notes[k],text,dt:new Date().toLocaleDateString('zh-TW')};setNotes(notes);rendNotes();}
+  else{delNote4(l,n);}
+}
+function delNote4(l,n){
+  if(!confirm('確定刪除此筆記？'))return;
+  const notes=getNotes();delete notes[noteKey(l,n)];setNotes(notes);rendNotes();
+}
+function clrNotes(){
+  if(!confirm('確定清除所有筆記？'))return;
+  localStorage.removeItem(NL);rendNotes();
+}
+
+// ===== TAB 5: COMPARE =====
+const QUICK_KWS=['行政院','立法院','監察院','審計長','中央主計機關','四個月','三個月','一個月','二個月','總決算','單位決算'];
+let t5Inited=false;
+function initT5Chks(){
+  if(t5Inited)return;
+  t5Inited=true;
+  const lf=eid('t5lf');
+  Object.keys(LAWS).forEach(l=>{
+    const lb=document.createElement('label');
+    lb.className='lc';
+    lb.innerHTML=`<input type="checkbox" checked value="${l}"> ${l}`;
+    lf.appendChild(lb);
+  });
+  const qk=eid('t5qk');
+  QUICK_KWS.forEach(kw=>{
+    const btn=document.createElement('button');
+    btn.className='qkb';btn.textContent=kw;
+    btn.onclick=()=>{eid('t5kw').value=kw;searchKW();};
+    qk.appendChild(btn);
+  });
+}
+function escRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function clrCmp(){eid('t5kw').value='';eid('t5res').innerHTML='';eid('t5stat').textContent='';}
+function searchKW(){
+  const kw=eid('t5kw').value.trim();
+  if(!kw){alert('請輸入關鍵字');return;}
+  const selLs=[...document.querySelectorAll('#t5lf input:checked')].map(i=>i.value);
+  let lawCnt=0,artCnt=0,html='';
+  selLs.forEach(l=>{
+    const arts=LAWS[l].filter(a=>a.t.includes(kw));
+    if(!arts.length)return;
+    lawCnt++;artCnt+=arts.length;
+    html+=`<div class="cmp-law"><h4>${eh(l)}（${arts.length}條）</h4>`;
+    arts.forEach(a=>{
+      const starred=isStarred(l,a.n);
+      const noted=hasNote(l,a.n);
+      const escKw=escRe(eh(kw));
+      const hiText=eh(a.t).replace(/\n/g,'<br>').replace(new RegExp(escKw,'g'),`<mark class="hl">${eh(kw)}</mark>`);
+      const uid=`${l}_${a.n}`.replace(/[^a-zA-Z0-9一-龥_]/g,'_');
+      html+=`<div class="cmp-art"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px"><strong>第${a.n}條</strong><div style="display:flex;gap:6px;align-items:center"><button class="star-btn" id="csb_${uid}" onclick="togStarC('${l}','${a.n}')" title="星號標記" style="font-size:18px">${starred?'★':'☆'}</button><button class="note-btn" id="cnb_${uid}" onclick="togNoteCmp('${l}','${a.n}')">${noted?'📝 已有筆記':'📝 筆記'}</button></div></div><div>${hiText}</div><div id="cnp_${uid}" style="display:none;margin-top:8px"></div></div>`;
+    });
+    html+='</div>';
+  });
+  eid('t5stat').textContent=`共找到 ${lawCnt} 部法律、${artCnt} 條條文包含「${kw}」`;
+  eid('t5res').innerHTML=html||'<p style="color:#9C8778">未找到相關條文。</p>';
+}
+function togStarC(l,n){
+  const s=getStar(),k=starKey(l,n);
+  if(s[k])delete s[k]; else s[k]={l,n};
+  setStar(s);
+  const uid=`${l}_${n}`.replace(/[^a-zA-Z0-9一-龥_]/g,'_');
+  const btn=eid(`csb_${uid}`);
+  if(btn)btn.textContent=isStarred(l,n)?'★':'☆';
+}
+function togNoteCmp(l,n){
+  const uid=`${l}_${n}`.replace(/[^a-zA-Z0-9一-龥_]/g,'_');
+  const np=eid(`cnp_${uid}`);
+  if(np.style.display==='block'){np.style.display='none';return;}
+  const note=getNotes()[noteKey(l,n)]||{};
+  np.innerHTML=`<div class="npanel"><textarea id="cnta_${uid}" rows="3" style="min-height:60px;background:#FFF3DF;border:1px solid #E8C9A0;width:100%;box-sizing:border-box" placeholder="輸入此條文的筆記...">${eh(note.text||'')}</textarea><div style="display:flex;gap:8px;margin-top:6px"><button class="btn bs" style="font-size:13px;padding:4px 10px" onclick="saveNoteCmp('${l}','${n}')">儲存</button><button class="btn bg" style="font-size:13px;padding:4px 10px" onclick="togNoteCmp('${l}','${n}')">關閉</button></div></div>`;
+  np.style.display='block';
+}
+function saveNoteCmp(l,n){
+  const uid=`${l}_${n}`.replace(/[^a-zA-Z0-9一-龥_]/g,'_');
+  const text=eid(`cnta_${uid}`).value.trim();
+  const notes=getNotes(),k=noteKey(l,n);
+  if(text){notes[k]={l,n,text,dt:new Date().toLocaleDateString('zh-TW')};}
+  else{delete notes[k];}
+  setNotes(notes);
+  const nb=eid(`cnb_${uid}`);
+  if(nb)nb.textContent=text?'📝 已有筆記':'📝 筆記';
+  eid(`cnp_${uid}`).style.display='none';
+}
+
+// ===== TAB 6: DAILY PLAN =====
+const PLANS_KEY='law_daily_plan_v2';
+const REVIEW_OFFSETS=[1,3,7,30];
+let T6;
+function resetT6State(){
+  T6={planId:null,dayId:null,stage:'read',readArts:[],readIdx:0,newQueue:[],reviewQueue:[],idx:0,results:{new:[],review:[]}};
+}
+resetT6State();
+
+function getPlans(){return JSON.parse(localStorage.getItem(PLANS_KEY)||'[]');}
+function setPlans(plans){localStorage.setItem(PLANS_KEY,JSON.stringify(plans));}
+function fmtDate(date){return date.toISOString().slice(0,10);}
+function getWeekday(date){return ['日','一','二','三','四','五','六'][date.getDay()];}
+function isTodayDate(text){return text===fmtDate(new Date());}
+function initT6(){
+  const sel=eid('t6law');
+  if(!sel.children.length){
+    Object.keys(LAWS).forEach(l=>{const o=document.createElement('option');o.value=l;o.textContent=l;sel.appendChild(o);});
+  }
+  if(!eid('t6start').value){eid('t6start').value=fmtDate(new Date());}
+  renderPlans();
+}
+function createPlan(){
+  const law=eid('t6law').value;
+  const perDay=Math.max(1,parseInt(eid('t6count').value)||5);
+  const startDate=eid('t6start').value||fmtDate(new Date());
+  if(!law||!LAWS[law]){alert('請選擇要練習的法律');return;}
+  const arts=LAWS[law];
+  const plan={id:`plan_${Date.now()}_${Math.floor(Math.random()*1000)}`,law,perDay,startDate,createdAt:new Date().toISOString(),days:[]};
+
+  // 第一輪：先算出每天要背的新條文範圍
+  const contentDays=[];
+  let next=1;
+  let dayNo=1;
+  while(next<=arts.length){
+    const newFrom=next;
+    const newTo=Math.min(arts.length,next+perDay-1);
+    contentDays.push({dayNo,newFrom,newTo});
+    next=newTo+1;
+    dayNo++;
+  }
+
+  // 記憶曲線複習日：背完後第1、3、7、30天各複習一次
+  // 進度表要延伸到最後一批新條文的第30天複習為止
+  const totalDays=contentDays.length+Math.max(...REVIEW_OFFSETS);
+  const contentByDayNo={};
+  contentDays.forEach(cd=>{contentByDayNo[cd.dayNo]=cd;});
+
+  let date=new Date(`${startDate}T00:00:00`);
+  for(let d=1;d<=totalDays;d++){
+    const cd=contentByDayNo[d];
+    plan.days.push({
+      id:`${plan.id}_day_${d}`,
+      dayNo:d,
+      date:fmtDate(new Date(date)),
+      weekday:getWeekday(date),
+      newFrom:cd?cd.newFrom:null,
+      newTo:cd?cd.newTo:null,
+      reviews:[],
+      completed:false,
+      completedAt:'',
+    });
+    date.setDate(date.getDate()+1);
+  }
+
+  // 第二輪：把每批新條文依記憶曲線排入對應的複習日
+  contentDays.forEach(cd=>{
+    REVIEW_OFFSETS.forEach(offset=>{
+      const targetDayNo=cd.dayNo+offset;
+      if(targetDayNo>totalDays)return;
+      plan.days[targetDayNo-1].reviews.push({
+        offset,
+        sourceDayNo:cd.dayNo,
+        sourceDate:plan.days[cd.dayNo-1].date,
+        from:cd.newFrom,
+        to:cd.newTo,
+      });
+    });
+  });
+
+  const plans=getPlans();
+  plans.push(plan);
+  setPlans(plans);
+  renderPlans();
+  ST('t6');
+}
+function resetPlans(){
+  if(!confirm('確定重設所有計畫？'))return;
+  localStorage.removeItem(PLANS_KEY);
+  renderPlans();
+}
+function deletePlan(planId){
+  const plans=getPlans();
+  const plan=plans.find(p=>p.id===planId);
+  if(!plan){alert('找不到該計畫，可能已被刪除。');renderPlans();return;}
+  if(!confirm(`確定刪除「${plan.law}」計畫（開始日期 ${plan.startDate}）？此操作無法復原。`))return;
+  if(T6.planId===planId){
+    closeT6Practice();
+    resetT6State();
+  }
+  setPlans(plans.filter(p=>p.id!==planId));
+  renderPlans();
+}
+function reviewLineText(r){
+  return `複習第${r.from}～${r.to}條（第${r.sourceDayNo}天內容・第${r.offset}次複習）`;
+}
+function renderTodayReminder(plans){
+  const box=eid('t6reminder');
+  const today=fmtDate(new Date());
+  const items=[];
+  plans.forEach(p=>{
+    const day=p.days.find(d=>d.date===today);
+    if(!day)return;
+    const reviews=[...(day.reviews||[])].sort((a,b)=>a.sourceDayNo-b.sourceDayNo);
+    reviews.forEach(r=>{
+      items.push(`<div class="reminder-item"><strong>${eh(p.law)}</strong>：${reviewLineText(r)}</div>`);
+    });
+  });
+  if(!items.length){box.innerHTML='';return;}
+  box.innerHTML=`<div class="reminder-box"><h4>🔔 今日複習提醒</h4>${items.join('')}</div>`;
+}
+function renderPlans(){
+  const plans=getPlans();
+  const wrap=eid('t6plans');
+  renderTodayReminder(plans);
+  if(!plans.length){wrap.innerHTML='<div class="card" style="text-align:center;color:#9C8778">尚無計畫，請先建立計畫。</div>';return;}
+  wrap.innerHTML=plans.map(p=>{
+    const doneCount=p.days.filter(d=>d.completed).length;
+    const header=`<div class="plan-card-toolbar"><strong>${p.law}</strong><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span class="plan-card-summary">每天 ${p.perDay} 條，開始 ${p.startDate}，共 ${p.days.length} 天，已完成 ${doneCount} 天</span><button class="btn bd" onclick="deletePlan('${p.id}')">刪除此計畫</button></div></div>`;
+    const body=p.days.map(d=>{
+      const statusClass=d.completed?'completed':(isTodayDate(d.date)?'today':'pending');
+      const statusText=d.completed?`已完成 ${d.completedAt}`:(isTodayDate(d.date)?'今天':'未完成');
+      const lines=[];
+      if(d.newFrom!=null)lines.push(`<div class="plan-summary">背第${d.newFrom}～${d.newTo}條</div>`);
+      [...(d.reviews||[])].sort((a,b)=>a.sourceDayNo-b.sourceDayNo).forEach(r=>{
+        lines.push(`<div class="plan-review-summary">${reviewLineText(r)}</div>`);
+      });
+      if(!lines.length)lines.push('<div class="plan-summary">本日無安排背誦或複習</div>');
+      return `<div class="plan-day"><div><strong>第${d.dayNo}天（${d.weekday}）</strong>${lines.join('')}</div><div class="plan-actions"><button class="btn bp" onclick="startT6Practice('${p.id}','${d.id}')">開始今日練習</button><button class="btn bs" onclick="toggleT6Complete('${p.id}','${d.id}')">${d.completed?'取消完成':'今日完成'}</button><span class="status ${statusClass}">${statusText}</span></div></div>`;
+    }).join('');
+    return `<div class="card">${header}${body}</div>`;
+  }).join('');
+}
+function toggleT6Complete(planId,dayId){
+  const plans=getPlans();
+  const plan=plans.find(p=>p.id===planId); if(!plan)return;
+  const day=plan.days.find(d=>d.id===dayId); if(!day)return;
+  day.completed=!day.completed;
+  day.completedAt=day.completed?new Date().toLocaleDateString('zh-TW'):'';
+  setPlans(plans);
+  renderPlans();
+}
+function startT6Practice(planId,dayId){
+  const plans=getPlans();
+  const plan=plans.find(p=>p.id===planId); if(!plan){alert('找不到計畫');return;}
+  const day=plan.days.find(d=>d.id===dayId); if(!day){alert('找不到該天進度');return;}
+  const arts=LAWS[plan.law];
+  const newArts=[];
+  if(day.newFrom!=null&&day.newTo!=null){
+    for(let n=day.newFrom;n<=day.newTo;n++){const a=arts.find(a=>parseInt(a.n,10)===n); if(a)newArts.push(a);}
+  }
+  const reviewArts=[];
+  [...(day.reviews||[])].sort((a,b)=>a.sourceDayNo-b.sourceDayNo).forEach(r=>{
+    for(let n=r.from;n<=r.to;n++){const a=arts.find(a=>parseInt(a.n,10)===n); if(a)reviewArts.push(a);}
+  });
+  if(!newArts.length&&!reviewArts.length){alert('今日無題目可練習');return;}
+  T6={planId,dayId,stage:'read',readArts:newArts,readIdx:0,newQueue:newArts,reviewQueue:reviewArts,idx:0,results:{new:[],review:[]}};
+  eid('t6practice').style.display='block';
+  eid('t6summaryCard').style.display='none';
+  eid('t6plans').scrollIntoView({behavior:'smooth'});
+  const title=`${plan.law} 第${day.dayNo}天`;
+  eid('t6pracTitle').textContent='今日練習';
+  eid('t6pracSubtitle').textContent=`${day.date} ${day.weekday} - ${title}`;
+  if(newArts.length){
+    eid('t6readCard').style.display='block';
+    eid('t6pracCard').style.display='none';
+    t6RenderRead();
+  } else {
+    // 當天沒有新條文（例如只剩複習），直接進入默寫練習
+    T6.stage='recite_review';
+    eid('t6readCard').style.display='none';
+    eid('t6pracCard').style.display='block';
+    t6RenderRecite();
+  }
+  t6UpdateStageUI();
+}
+
+// ----- 第一階段：閱讀理解 -----
+function t6RenderRead(){
+  const plan=getPlans().find(p=>p.id===T6.planId); if(!plan)return;
+  const art=T6.readArts[T6.readIdx]; if(!art)return;
+  const l=plan.law,n=art.n;
+  eid('t6readText').innerHTML=`<strong>第${eh(n)}條</strong><br>${eh(art.t)}`;
+  eid('t6readStarBtn').textContent=isStarred(l,n)?'★':'☆';
+  eid('t6readNoteBtn').textContent=hasNote(l,n)?'📝 已有筆記':'📝 新增筆記';
+  eid('t6readNotePanel').style.display='none';
+  eid('t6readCounter').textContent=`第 ${T6.readIdx+1} / ${T6.readArts.length} 條`;
+  eid('t6readPrev').disabled=T6.readIdx===0;
+  const isLast=T6.readIdx===T6.readArts.length-1;
+  eid('t6readNext').style.display=isLast?'none':'inline-block';
+  eid('t6readStartBtn').style.display=isLast?'inline-block':'none';
+  t6UpdateStageUI();
+}
+function t6ReadPrev(){if(T6.readIdx>0){T6.readIdx--;t6RenderRead();}}
+function t6ReadNext(){if(T6.readIdx<T6.readArts.length-1){T6.readIdx++;t6RenderRead();}}
+function t6ReadToggleStar(){
+  const plan=getPlans().find(p=>p.id===T6.planId); if(!plan)return;
+  const art=T6.readArts[T6.readIdx]; if(!art)return;
+  const s=getStar(),k=starKey(plan.law,art.n);
+  if(s[k])delete s[k]; else s[k]={l:plan.law,n:art.n};
+  setStar(s);
+  eid('t6readStarBtn').textContent=isStarred(plan.law,art.n)?'★':'☆';
+}
+function t6ReadToggleNote(){
+  const panel=eid('t6readNotePanel');
+  if(panel.style.display==='block'){panel.style.display='none';return;}
+  const plan=getPlans().find(p=>p.id===T6.planId); if(!plan)return;
+  const art=T6.readArts[T6.readIdx]; if(!art)return;
+  const note=getNotes()[noteKey(plan.law,art.n)]||{};
+  eid('t6readNoteText').value=note.text||'';
+  panel.style.display='block';
+}
+function t6ReadSaveNote(){
+  const plan=getPlans().find(p=>p.id===T6.planId); if(!plan)return;
+  const art=T6.readArts[T6.readIdx]; if(!art)return;
+  const text=eid('t6readNoteText').value.trim();
+  const notes=getNotes(),k=noteKey(plan.law,art.n);
+  if(text)notes[k]={l:plan.law,n:art.n,text,dt:new Date().toLocaleDateString('zh-TW')};
+  else delete notes[k];
+  setNotes(notes);
+  eid('t6readNoteBtn').textContent=text?'📝 已有筆記':'📝 新增筆記';
+  eid('t6readNotePanel').style.display='none';
+}
+function t6SkipRead(){t6StartRecite();}
+function t6StartRecite(){
+  T6.stage='recite_new';
+  T6.idx=0;
+  eid('t6readCard').style.display='none';
+  eid('t6pracCard').style.display='block';
+  t6RenderRecite();
+}
+
+// ----- 第二/三階段：默寫練習（新條文／複習） -----
+function t6CurQueue(){return T6.stage==='recite_review'?T6.reviewQueue:T6.newQueue;}
+function t6RenderRecite(){
+  const queue=t6CurQueue();
+  const art=queue[T6.idx]; if(!art)return;
+  const stageLabel=T6.stage==='recite_review'?'複習默寫':'新條文默寫';
+  eid('t6pracStage').textContent=stageLabel;
+  eid('t6pracLabel').textContent=`第${art.n}條`;
+  eid('t6pracText').innerHTML=`請默寫 <strong>第${eh(art.n)}條</strong> 的完整條文內容`;
+  eid('t6pracCounter').textContent=`第 ${T6.idx+1} / ${queue.length} 條`;
+  eid('t6pracInput').value='';
+  eid('t6pracResult').style.display='none';
+  const isLast=T6.idx+1>=queue.length;
+  let nextLabel='下一題';
+  if(isLast){
+    nextLabel=(T6.stage==='recite_new'&&T6.reviewQueue.length)?'進入複習':'完成今日練習';
+  }
+  eid('t6pracNextBtn').textContent=nextLabel;
+  t6UpdateStageUI();
+}
+function t6Check(){
+  const queue=t6CurQueue();
+  const art=queue[T6.idx]; if(!art)return;
+  const u=eid('t6pracInput').value.trim();
+  if(!u){alert('請輸入答案後再比對');return;}
+  const c=art.t.trim();
+  const d=buildDiff(u,c);
+  const resKey=T6.stage==='recite_review'?'review':'new';
+  T6.results[resKey][T6.idx]={artNo:art.n,cnt:d.cnt};
+  eid('t6pracResult').style.display='block';
+  eid('t6pracResult').innerHTML=`<div class="diff-block"><h4>比對結果</h4><div class="diff-row"><span class="diff-tag">您的答案</span><span class="diff-text">${d.h1}</span></div><div class="diff-row"><span class="diff-tag">正確答案</span><span class="diff-text">${d.h2}</span></div><div class="diff-cnt">共差異 ${d.cnt} 處</div></div>`;
+}
+function t6ShowAnswer(){
+  const queue=t6CurQueue();
+  const art=queue[T6.idx]; if(!art)return;
+  eid('t6pracResult').style.display='block';
+  eid('t6pracResult').innerHTML=`<div class="adisp" style="background:#FFF3E0;border:1px solid #E8C9A0"><strong>答案：</strong><br>${eh(art.t)}</div>`;
+}
+function t6Next(){
+  const queue=t6CurQueue();
+  if(T6.idx+1<queue.length){
+    T6.idx++;
+    t6RenderRecite();
+    return;
+  }
+  if(T6.stage==='recite_new'&&T6.reviewQueue.length){
+    T6.stage='recite_review';
+    T6.idx=0;
+    t6RenderRecite();
+    return;
+  }
+  t6Finish();
+}
+
+// ----- 第四階段：今日成績總結 -----
+function t6Finish(){
+  const plans=getPlans();
+  const plan=plans.find(p=>p.id===T6.planId); if(!plan)return;
+  const day=plan.days.find(d=>d.id===T6.dayId); if(!day)return;
+  day.completed=true;
+  day.completedAt=new Date().toLocaleDateString('zh-TW');
+  setPlans(plans);
+  renderPlans();
+  T6.stage='summary';
+  eid('t6readCard').style.display='none';
+  eid('t6pracCard').style.display='none';
+  eid('t6summaryCard').style.display='block';
+  const newRes=T6.results.new.filter(Boolean);
+  const reviewRes=T6.results.review.filter(Boolean);
+  const all=[...newRes,...reviewRes];
+  const perfect=all.filter(r=>r.cnt===0).length;
+  const totalDiff=all.reduce((s,r)=>s+r.cnt,0);
+  eid('t6summaryCard').innerHTML=`
+    <h3 style="margin-bottom:12px">🎉 今日練習完成！</h3>
+    <div style="font-size:15px;line-height:2;text-align:left;display:inline-block">
+      <div>新條文默寫：${T6.newQueue.length} 條</div>
+      <div>複習條文：${T6.reviewQueue.length} 條</div>
+      <div>完全正確：${perfect} / ${all.length} 條</div>
+      <div>總差異字數：${totalDiff} 處</div>
+    </div>
+    <div style="margin-top:16px"><button class="btn bp" onclick="closeT6Practice()">回進度表</button></div>
+  `;
+  t6UpdateStageUI();
+}
+
+// ----- 階段進度顯示 -----
+function t6UpdateStageUI(){
+  const labels={read:'第一階段：閱讀理解',recite_new:'第二階段：默寫練習',recite_review:'第三階段：複習舊條文',summary:'✅ 已完成'};
+  eid('t6stageBadge').textContent=labels[T6.stage]||'';
+  const order=['read','recite_new','recite_review','summary'];
+  const steps=[{key:'read',label:'閱讀理解'},{key:'recite_new',label:'默寫練習'}];
+  if(T6.reviewQueue.length)steps.push({key:'recite_review',label:'複習'});
+  const curIdx=order.indexOf(T6.stage);
+  eid('t6stageSteps').innerHTML=steps.map(s=>{
+    const sIdx=order.indexOf(s.key);
+    const done=T6.stage==='summary'||sIdx<curIdx;
+    const active=s.key===T6.stage;
+    const icon=done?'✅':(active?'▶':'○');
+    return `<span style="margin-right:8px;${active?'font-weight:bold;color:#8B5E3C':'color:#9C8778'}">${icon} ${s.label}</span>`;
+  }).join('');
+}
+function closeT6Practice(){
+  eid('t6practice').style.display='none';
+}
+
+// ===== STAR =====
+const SL='law_star_v1';
+function getStar(){return JSON.parse(localStorage.getItem(SL)||'{}');}
+function setStar(o){localStorage.setItem(SL,JSON.stringify(o));}
+function starKey(l,n){return `${l}|${n}`;}
+function isStarred(l,n){return !!getStar()[starKey(l,n)];}
+
+function togStar1(){
+  if(!S1.cur)return;
+  const {l,a}=S1.cur;
+  const s=getStar(),k=starKey(l,a.n);
+  if(s[k])delete s[k]; else s[k]={l,n:a.n};
+  setStar(s);
+  eid('sb1').textContent=isStarred(l,a.n)?'★':'☆';
+}
+
+function togStar2(){
+  if(!S2.qz.length)return;
+  const q=S2.qz[S2.idx];
+  const s=getStar(),k=starKey(q.l,q.a.n);
+  if(s[k])delete s[k]; else s[k]={l:q.l,n:q.a.n};
+  setStar(s);
+  eid('sb2').textContent=isStarred(q.l,q.a.n)?'★':'☆';
+}
+
+function rendStar(){
+  const ents=Object.values(getStar());
+  if(!ents.length){eid('t4star').innerHTML='<p style="color:#9C8778">尚無星號標記題目。</p>';return;}
+  eid('t4star').innerHTML=ents.map(e=>{
+    const art=LAWS[e.l]?.find(a=>a.n===e.n);
+    if(!art)return '';
+    return `<div class="ee"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><div><strong>${e.l}</strong> 第${e.n}條</div><button class="star-btn" title="取消標記" onclick="unstar('${e.l}','${e.n}')">★</button></div><div style="margin-top:8px;font-size:13px;color:#795548;white-space:pre-wrap;background:#FFF3DF;padding:8px;border-radius:4px;line-height:1.8">${eh(art.t)}</div></div>`;
+  }).filter(Boolean).join('');
+}
+
+function unstar(l,n){
+  const s=getStar();
+  delete s[starKey(l,n)];
+  setStar(s);
+  rendStar();
+}
+
+function clrStar(){
+  if(!confirm('確定取消所有星號標記？'))return;
+  localStorage.removeItem(SL);
+  rendStar();
+}
+
+function pracStar(){
+  const ents=Object.values(getStar());
+  if(!ents.length){alert('尚無星號標記題目');return;}
+  const pool=ents.map(e=>({l:e.l,a:LAWS[e.l]?.find(a=>a.n===e.n)})).filter(x=>x.a);
+  if(!pool.length){alert('找不到對應條文');return;}
+  S1.pool=pool;S1.cur=null;
+  eid('t1art').style.display='none';
+  eid('t1res').style.display='none';
+  ST('t1');
+  alert(`已載入 ${pool.length} 條星號標記題目，請點擊「抽題」開始練習。`);
+}
+
+// ===== INIT =====
+function init(){
+  const sel=eid('t2sel');
+  Object.keys(LAWS).forEach(l=>{
+    const o=document.createElement('option');
+    o.value=l;o.textContent=l;sel.appendChild(o);
+  });
+  initT1();
+}
+init();
+</script>
+</body>
+</html>
