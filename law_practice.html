@@ -87,6 +87,7 @@ select,input[type=text]{padding:7px;border:1px solid #D4A876;border-radius:4px;f
 <body>
 <div class="wrap">
 <h1>📚 法規練習系統</h1>
+<div id="authBox" style="text-align:center;margin:-8px 0 16px;font-size:13px;color:#795548"></div>
 <div class="tabs">
   <button class="tb on" onclick="ST('t1')">抽題模式</button>
   <button class="tb" onclick="ST('t2')">挖空選擇題</button>
@@ -376,6 +377,9 @@ select,input[type=text]{padding:7px;border:1px solid #D4A876;border-radius:4px;f
 </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script>
 // ===== LAW DATA =====
 const LAWS = {
@@ -1681,6 +1685,8 @@ const S1={att:0,cor:0,tc:0,cc:0,cur:null,pool:null};
 const S2={qz:[],idx:0,wrongs:[],blanks:[],ab:-1,tot:0,hit:0};
 let kwN=1;
 const EL='law_err_v1';
+function getErrLog(){return JSON.parse(localStorage.getItem(EL)||'{}');}
+function setErrLog(o){localStorage.setItem(EL,JSON.stringify(o));syncPush();}
 const TM={rem:0,iv:null,ovt1:0,ovt2:0};
 
 // ===== UTILS =====
@@ -1942,15 +1948,15 @@ function rePrac(){
 
 // ===== TAB 4 =====
 function saveErr(l,n,kw){
-  const log=JSON.parse(localStorage.getItem(EL)||'{}');
+  const log=getErrLog();
   const k=`${l}|${n}|${kw}`;
   if(!log[k])log[k]={l,n,kw,cnt:0,dt:''};
   log[k].cnt++;log[k].dt=new Date().toLocaleDateString('zh-TW');
-  localStorage.setItem(EL,JSON.stringify(log));
+  setErrLog(log);
 }
 
 function rendLog(){
-  const log=JSON.parse(localStorage.getItem(EL)||'{}');
+  const log=getErrLog();
   const ents=Object.values(log).sort((a,b)=>b.cnt-a.cnt);
   if(!ents.length){eid('t4c').innerHTML='<p style="color:#9C8778">暫無錯題記錄。</p>';return;}
   eid('t4c').innerHTML=ents.map(e=>`<div class="ee"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><div><strong>${e.l}</strong> 第${e.n}條 <span style="color:#795548;font-size:13px">關鍵字：${eh(e.kw)}</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9C8778">${e.dt}</span><span class="cb">錯 ${e.cnt} 次</span></div></div></div>`).join('');
@@ -1958,11 +1964,11 @@ function rendLog(){
 
 function clrLog(){
   if(!confirm('確定清除所有錯題記錄？'))return;
-  localStorage.removeItem(EL);rendLog();
+  setErrLog({});rendLog();
 }
 
 function pracLog(){
-  const log=JSON.parse(localStorage.getItem(EL)||'{}');
+  const log=getErrLog();
   const ents=Object.values(log);
   if(!ents.length){alert('暫無錯題記錄');return;}
   const pool=ents.map(e=>({l:e.l,a:LAWS[e.l]?.find(a=>a.n===e.n)})).filter(x=>x.a);
@@ -2079,7 +2085,7 @@ function tmrExpT2(){
 // ===== NOTES =====
 const NL='law_note_v1';
 function getNotes(){return JSON.parse(localStorage.getItem(NL)||'{}');}
-function setNotes(o){localStorage.setItem(NL,JSON.stringify(o));}
+function setNotes(o){localStorage.setItem(NL,JSON.stringify(o));syncPush();}
 function noteKey(l,n){return `${l}|${n}`;}
 function hasNote(l,n){return !!(getNotes()[noteKey(l,n)]||{}).text;}
 
@@ -2146,7 +2152,7 @@ function delNote4(l,n){
 }
 function clrNotes(){
   if(!confirm('確定清除所有筆記？'))return;
-  localStorage.removeItem(NL);rendNotes();
+  setNotes({});rendNotes();
 }
 
 // ===== TAB 5: COMPARE =====
@@ -2233,7 +2239,7 @@ function resetT6State(){
 resetT6State();
 
 function getPlans(){return JSON.parse(localStorage.getItem(PLANS_KEY)||'[]');}
-function setPlans(plans){localStorage.setItem(PLANS_KEY,JSON.stringify(plans));}
+function setPlans(plans){localStorage.setItem(PLANS_KEY,JSON.stringify(plans));syncPush();}
 function fmtDate(date){return date.toISOString().slice(0,10);}
 function getWeekday(date){return ['日','一','二','三','四','五','六'][date.getDay()];}
 function isTodayDate(text){return text===fmtDate(new Date());}
@@ -2311,7 +2317,7 @@ function createPlan(){
 }
 function resetPlans(){
   if(!confirm('確定重設所有計畫？'))return;
-  localStorage.removeItem(PLANS_KEY);
+  setPlans([]);
   renderPlans();
 }
 function deletePlan(planId){
@@ -2573,7 +2579,7 @@ function closeT6Practice(){
 // ===== STAR =====
 const SL='law_star_v1';
 function getStar(){return JSON.parse(localStorage.getItem(SL)||'{}');}
-function setStar(o){localStorage.setItem(SL,JSON.stringify(o));}
+function setStar(o){localStorage.setItem(SL,JSON.stringify(o));syncPush();}
 function starKey(l,n){return `${l}|${n}`;}
 function isStarred(l,n){return !!getStar()[starKey(l,n)];}
 
@@ -2614,7 +2620,7 @@ function unstar(l,n){
 
 function clrStar(){
   if(!confirm('確定取消所有星號標記？'))return;
-  localStorage.removeItem(SL);
+  setStar({});
   rendStar();
 }
 
@@ -2628,6 +2634,108 @@ function pracStar(){
   eid('t1res').style.display='none';
   ST('t1');
   alert(`已載入 ${pool.length} 條星號標記題目，請點擊「抽題」開始練習。`);
+}
+
+// ===== CLOUD SYNC =====
+// 尚未填入真的 Firebase 設定前，cloudSyncEnabled 為 false，以下同步邏輯完全不執行，
+// 不影響原本純本機儲存的功能。填入設定後把下面這行的判斷值改成會通過即可啟用。
+const firebaseConfig={apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT",storageBucket:"YOUR_PROJECT.appspot.com",messagingSenderId:"YOUR_SENDER_ID",appId:"YOUR_APP_ID"};
+const cloudSyncEnabled=firebaseConfig.apiKey!=='YOUR_API_KEY';
+
+let auth,db,currentUser=null,unsubscribeSnapshot=null,pushTimer=null;
+
+function collectLocalState(){return{stars:getStar(),notes:getNotes(),errlog:getErrLog(),plans:getPlans()};}
+
+function mergeMaps(cloud,local){return{...(cloud||{}),...(local||{})};}
+
+function mergePlans(cloudArr,localArr){
+  cloudArr=cloudArr||[];localArr=localArr||[];
+  const doneCount=p=>(p.days||[]).filter(d=>d.completed).length;
+  const byId={};
+  cloudArr.forEach(p=>{byId[p.id]=p;});
+  localArr.forEach(p=>{
+    const existing=byId[p.id];
+    if(!existing||doneCount(p)>=doneCount(existing))byId[p.id]=p;
+  });
+  return Object.values(byId);
+}
+
+function mergeState(cloud,local){
+  cloud=cloud||{};
+  return{
+    stars:mergeMaps(cloud.stars,local.stars),
+    notes:mergeMaps(cloud.notes,local.notes),
+    errlog:mergeMaps(cloud.errlog,local.errlog),
+    plans:mergePlans(cloud.plans,local.plans),
+  };
+}
+
+function setSyncStatus(text){const s=eid('syncStatus');if(s)s.textContent=text;}
+
+function syncDocRef(){return db.collection('syncData').doc(currentUser.uid);}
+
+function syncPush(){
+  if(!cloudSyncEnabled||!currentUser)return;
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(()=>{
+    syncDocRef().set({...collectLocalState(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
+      .then(()=>setSyncStatus(`最後同步：${new Date().toLocaleTimeString('zh-TW')}`))
+      .catch(e=>{console.error('雲端同步寫入失敗',e);setSyncStatus('同步失敗');});
+  },500);
+}
+
+function receiveCloudUpdate(cloud){
+  const merged=mergeState(cloud,collectLocalState());
+  localStorage.setItem(SL,JSON.stringify(merged.stars));
+  localStorage.setItem(NL,JSON.stringify(merged.notes));
+  localStorage.setItem(EL,JSON.stringify(merged.errlog));
+  localStorage.setItem(PLANS_KEY,JSON.stringify(merged.plans));
+  rendStar();rendNotes();rendLog();renderPlans();
+  setSyncStatus(`最後同步：${new Date().toLocaleTimeString('zh-TW')}`);
+}
+
+function startCloudSync(){
+  syncDocRef().get().then(snap=>{
+    receiveCloudUpdate(snap.exists?snap.data():null);
+    syncPush();
+    unsubscribeSnapshot=syncDocRef().onSnapshot(snap=>{
+      if(snap.metadata.hasPendingWrites)return;
+      receiveCloudUpdate(snap.data());
+    });
+  }).catch(e=>{console.error('雲端同步讀取失敗',e);setSyncStatus('同步失敗');});
+}
+
+function stopCloudSync(){
+  if(unsubscribeSnapshot){unsubscribeSnapshot();unsubscribeSnapshot=null;}
+}
+
+function updateAuthUI(){
+  const box=eid('authBox');
+  if(!box||!cloudSyncEnabled){if(box)box.innerHTML='';return;}
+  if(currentUser){
+    box.innerHTML=`✅ 已登入同步：${eh(currentUser.email||currentUser.displayName||'')} <button class="note-btn" onclick="signOutUser()">登出</button> <span id="syncStatus" style="color:#9C8778"></span>`;
+  }else{
+    box.innerHTML=`<button class="note-btn" onclick="signIn()">🔗 使用 Google 登入以同步進度</button>`;
+  }
+}
+
+function signIn(){
+  if(!cloudSyncEnabled){alert('尚未設定 Firebase，雲端同步功能未啟用');return;}
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>alert('登入失敗：'+e.message));
+}
+function signOutUser(){if(auth)auth.signOut();}
+
+if(cloudSyncEnabled){
+  firebase.initializeApp(firebaseConfig);
+  auth=firebase.auth();
+  db=firebase.firestore();
+  auth.onAuthStateChanged(user=>{
+    currentUser=user;
+    updateAuthUI();
+    if(user)startCloudSync();else stopCloudSync();
+  });
+}else{
+  console.info('尚未設定 Firebase config，雲端同步功能停用（僅使用本機儲存）。');
 }
 
 // ===== INIT =====
