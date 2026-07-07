@@ -2719,9 +2719,19 @@ function updateAuthUI(){
   }
 }
 
+function isMobileBrowser(){
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
 function signIn(){
   if(!cloudSyncEnabled){alert('尚未設定 Firebase，雲端同步功能未啟用');return;}
-  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>alert('登入失敗：'+e.message));
+  const provider=new firebase.auth.GoogleAuthProvider();
+  // 手機瀏覽器（尤其 iOS Safari）常因隱私保護機制擋掉彈出視窗登入，改用整頁跳轉較穩定
+  if(isMobileBrowser()){
+    auth.signInWithRedirect(provider);
+  }else{
+    auth.signInWithPopup(provider).catch(e=>alert('登入失敗：'+e.message));
+  }
 }
 function signOutUser(){if(auth)auth.signOut();}
 
@@ -2729,6 +2739,7 @@ if(cloudSyncEnabled){
   firebase.initializeApp(firebaseConfig);
   auth=firebase.auth();
   db=firebase.firestore();
+  auth.getRedirectResult().catch(e=>alert('登入失敗：'+e.message));
   auth.onAuthStateChanged(user=>{
     currentUser=user;
     updateAuthUI();
