@@ -1950,26 +1950,28 @@ function rePrac(){
 function saveErr(l,n,kw){
   const log=getErrLog();
   const k=`${l}|${n}|${kw}`;
-  if(!log[k])log[k]={l,n,kw,cnt:0,dt:''};
-  log[k].cnt++;log[k].dt=new Date().toLocaleDateString('zh-TW');
+  if(!isActive(log[k]))log[k]={l,n,kw,cnt:0,dt:''};
+  log[k].cnt++;log[k].dt=new Date().toLocaleDateString('zh-TW');log[k]._t=Date.now();
   setErrLog(log);
 }
 
 function rendLog(){
   const log=getErrLog();
-  const ents=Object.values(log).sort((a,b)=>b.cnt-a.cnt);
+  const ents=Object.values(log).filter(isActive).sort((a,b)=>b.cnt-a.cnt);
   if(!ents.length){eid('t4c').innerHTML='<p style="color:#9C8778">暫無錯題記錄。</p>';return;}
   eid('t4c').innerHTML=ents.map(e=>`<div class="ee"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><div><strong>${e.l}</strong> 第${e.n}條 <span style="color:#795548;font-size:13px">關鍵字：${eh(e.kw)}</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:#9C8778">${e.dt}</span><span class="cb">錯 ${e.cnt} 次</span></div></div></div>`).join('');
 }
 
 function clrLog(){
   if(!confirm('確定清除所有錯題記錄？'))return;
-  setErrLog({});rendLog();
+  const log=getErrLog(),now=Date.now();
+  Object.keys(log).forEach(k=>{log[k]={_deleted:true,_t:now};});
+  setErrLog(log);rendLog();
 }
 
 function pracLog(){
   const log=getErrLog();
-  const ents=Object.values(log);
+  const ents=Object.values(log).filter(isActive);
   if(!ents.length){alert('暫無錯題記錄');return;}
   const pool=ents.map(e=>({l:e.l,a:LAWS[e.l]?.find(a=>a.n===e.n)})).filter(x=>x.a);
   if(!pool.length){alert('找不到對應條文');return;}
@@ -2103,8 +2105,8 @@ function saveNoteT1(){
   const {l,a}=S1.cur;
   const text=eid('t1nta').value.trim();
   const notes=getNotes(),k=noteKey(l,a.n);
-  if(text){notes[k]={l,n:a.n,text,dt:new Date().toLocaleDateString('zh-TW')};}
-  else{delete notes[k];}
+  if(text){notes[k]={l,n:a.n,text,dt:new Date().toLocaleDateString('zh-TW'),_t:Date.now()};}
+  else{notes[k]={_deleted:true,_t:Date.now()};}
   setNotes(notes);
   eid('t1nb_btn').textContent=text?'📝 已有筆記':'📝 筆記';
   eid('t1np').style.display='none';
@@ -2123,8 +2125,8 @@ function saveNoteT2(){
   const q=S2.qz[S2.idx];
   const text=eid('t2nta').value.trim();
   const notes=getNotes(),k=noteKey(q.l,q.a.n);
-  if(text){notes[k]={l:q.l,n:q.a.n,text,dt:new Date().toLocaleDateString('zh-TW')};}
-  else{delete notes[k];}
+  if(text){notes[k]={l:q.l,n:q.a.n,text,dt:new Date().toLocaleDateString('zh-TW'),_t:Date.now()};}
+  else{notes[k]={_deleted:true,_t:Date.now()};}
   setNotes(notes);
   eid('t2nb_note').textContent=text?'📝 已有筆記':'📝 筆記';
   eid('t2np').style.display='none';
@@ -2143,16 +2145,18 @@ function editNote4(i){
 function saveNote4(l,n,i){
   const text=eid(`ne_ta${i}`).value.trim();
   const notes=getNotes(),k=noteKey(l,n);
-  if(text){notes[k]={...notes[k],text,dt:new Date().toLocaleDateString('zh-TW')};setNotes(notes);rendNotes();}
+  if(text){notes[k]={...notes[k],text,dt:new Date().toLocaleDateString('zh-TW'),_t:Date.now()};setNotes(notes);rendNotes();}
   else{delNote4(l,n);}
 }
 function delNote4(l,n){
   if(!confirm('確定刪除此筆記？'))return;
-  const notes=getNotes();delete notes[noteKey(l,n)];setNotes(notes);rendNotes();
+  const notes=getNotes();notes[noteKey(l,n)]={_deleted:true,_t:Date.now()};setNotes(notes);rendNotes();
 }
 function clrNotes(){
   if(!confirm('確定清除所有筆記？'))return;
-  setNotes({});rendNotes();
+  const notes=getNotes(),now=Date.now();
+  Object.keys(notes).forEach(k=>{notes[k]={_deleted:true,_t:now};});
+  setNotes(notes);rendNotes();
 }
 
 // ===== TAB 5: COMPARE =====
@@ -2203,7 +2207,7 @@ function searchKW(){
 }
 function togStarC(l,n){
   const s=getStar(),k=starKey(l,n);
-  if(s[k])delete s[k]; else s[k]={l,n};
+  s[k]=isActive(s[k])?{_deleted:true,_t:Date.now()}:{l,n,_t:Date.now()};
   setStar(s);
   const uid=`${l}_${n}`.replace(/[^a-zA-Z0-9一-龥_]/g,'_');
   const btn=eid(`csb_${uid}`);
@@ -2221,8 +2225,8 @@ function saveNoteCmp(l,n){
   const uid=`${l}_${n}`.replace(/[^a-zA-Z0-9一-龥_]/g,'_');
   const text=eid(`cnta_${uid}`).value.trim();
   const notes=getNotes(),k=noteKey(l,n);
-  if(text){notes[k]={l,n,text,dt:new Date().toLocaleDateString('zh-TW')};}
-  else{delete notes[k];}
+  if(text){notes[k]={l,n,text,dt:new Date().toLocaleDateString('zh-TW'),_t:Date.now()};}
+  else{notes[k]={_deleted:true,_t:Date.now()};}
   setNotes(notes);
   const nb=eid(`cnb_${uid}`);
   if(nb)nb.textContent=text?'📝 已有筆記':'📝 筆記';
@@ -2317,19 +2321,22 @@ function createPlan(){
 }
 function resetPlans(){
   if(!confirm('確定重設所有計畫？'))return;
-  setPlans([]);
+  const plans=getPlans();
+  plans.forEach(p=>{p._deleted=true;});
+  setPlans(plans);
   renderPlans();
 }
 function deletePlan(planId){
   const plans=getPlans();
-  const plan=plans.find(p=>p.id===planId);
+  const plan=plans.find(p=>p.id===planId&&!p._deleted);
   if(!plan){alert('找不到該計畫，可能已被刪除。');renderPlans();return;}
   if(!confirm(`確定刪除「${plan.law}」計畫（開始日期 ${plan.startDate}）？此操作無法復原。`))return;
   if(T6.planId===planId){
     closeT6Practice();
     resetT6State();
   }
-  setPlans(plans.filter(p=>p.id!==planId));
+  plan._deleted=true;
+  setPlans(plans);
   renderPlans();
 }
 function reviewLineText(r){
@@ -2351,7 +2358,7 @@ function renderTodayReminder(plans){
   box.innerHTML=`<div class="reminder-box"><h4>🔔 今日複習提醒</h4>${items.join('')}</div>`;
 }
 function renderPlans(){
-  const plans=getPlans();
+  const plans=getPlans().filter(p=>!p._deleted);
   const wrap=eid('t6plans');
   renderTodayReminder(plans);
   if(!plans.length){wrap.innerHTML='<div class="card" style="text-align:center;color:#9C8778">尚無計畫，請先建立計畫。</div>';return;}
@@ -2438,7 +2445,7 @@ function t6ReadToggleStar(){
   const plan=getPlans().find(p=>p.id===T6.planId); if(!plan)return;
   const art=T6.readArts[T6.readIdx]; if(!art)return;
   const s=getStar(),k=starKey(plan.law,art.n);
-  if(s[k])delete s[k]; else s[k]={l:plan.law,n:art.n};
+  s[k]=isActive(s[k])?{_deleted:true,_t:Date.now()}:{l:plan.law,n:art.n,_t:Date.now()};
   setStar(s);
   eid('t6readStarBtn').textContent=isStarred(plan.law,art.n)?'★':'☆';
 }
@@ -2456,8 +2463,8 @@ function t6ReadSaveNote(){
   const art=T6.readArts[T6.readIdx]; if(!art)return;
   const text=eid('t6readNoteText').value.trim();
   const notes=getNotes(),k=noteKey(plan.law,art.n);
-  if(text)notes[k]={l:plan.law,n:art.n,text,dt:new Date().toLocaleDateString('zh-TW')};
-  else delete notes[k];
+  if(text)notes[k]={l:plan.law,n:art.n,text,dt:new Date().toLocaleDateString('zh-TW'),_t:Date.now()};
+  else notes[k]={_deleted:true,_t:Date.now()};
   setNotes(notes);
   eid('t6readNoteBtn').textContent=text?'📝 已有筆記':'📝 新增筆記';
   eid('t6readNotePanel').style.display='none';
@@ -2581,13 +2588,16 @@ const SL='law_star_v1';
 function getStar(){return JSON.parse(localStorage.getItem(SL)||'{}');}
 function setStar(o){localStorage.setItem(SL,JSON.stringify(o));syncPush();}
 function starKey(l,n){return `${l}|${n}`;}
-function isStarred(l,n){return !!getStar()[starKey(l,n)];}
+// 跨裝置同步採用「刪除墓碑」：刪除不直接移除 key，而是標記 _deleted+時間戳，
+// 讓合併時能分辨「這台裝置從沒有過」跟「這台裝置主動刪除過」，避免刪除被別裝置的舊資料復活覆蓋
+function isActive(e){return !!e&&!e._deleted;}
+function isStarred(l,n){return isActive(getStar()[starKey(l,n)]);}
 
 function togStar1(){
   if(!S1.cur)return;
   const {l,a}=S1.cur;
   const s=getStar(),k=starKey(l,a.n);
-  if(s[k])delete s[k]; else s[k]={l,n:a.n};
+  s[k]=isActive(s[k])?{_deleted:true,_t:Date.now()}:{l,n:a.n,_t:Date.now()};
   setStar(s);
   eid('sb1').textContent=isStarred(l,a.n)?'★':'☆';
 }
@@ -2596,13 +2606,13 @@ function togStar2(){
   if(!S2.qz.length)return;
   const q=S2.qz[S2.idx];
   const s=getStar(),k=starKey(q.l,q.a.n);
-  if(s[k])delete s[k]; else s[k]={l:q.l,n:q.a.n};
+  s[k]=isActive(s[k])?{_deleted:true,_t:Date.now()}:{l:q.l,n:q.a.n,_t:Date.now()};
   setStar(s);
   eid('sb2').textContent=isStarred(q.l,q.a.n)?'★':'☆';
 }
 
 function rendStar(){
-  const ents=Object.values(getStar());
+  const ents=Object.values(getStar()).filter(isActive);
   if(!ents.length){eid('t4star').innerHTML='<p style="color:#9C8778">尚無星號標記題目。</p>';return;}
   eid('t4star').innerHTML=ents.map(e=>{
     const art=LAWS[e.l]?.find(a=>a.n===e.n);
@@ -2613,19 +2623,21 @@ function rendStar(){
 
 function unstar(l,n){
   const s=getStar();
-  delete s[starKey(l,n)];
+  s[starKey(l,n)]={_deleted:true,_t:Date.now()};
   setStar(s);
   rendStar();
 }
 
 function clrStar(){
   if(!confirm('確定取消所有星號標記？'))return;
-  setStar({});
+  const s=getStar(),now=Date.now();
+  Object.keys(s).forEach(k=>{s[k]={_deleted:true,_t:now};});
+  setStar(s);
   rendStar();
 }
 
 function pracStar(){
-  const ents=Object.values(getStar());
+  const ents=Object.values(getStar()).filter(isActive);
   if(!ents.length){alert('尚無星號標記題目');return;}
   const pool=ents.map(e=>({l:e.l,a:LAWS[e.l]?.find(a=>a.n===e.n)})).filter(x=>x.a);
   if(!pool.length){alert('找不到對應條文');return;}
@@ -2646,7 +2658,18 @@ let auth,db,currentUser=null,unsubscribeSnapshot=null,pushTimer=null;
 
 function collectLocalState(){return{stars:getStar(),notes:getNotes(),errlog:getErrLog(),plans:getPlans()};}
 
-function mergeMaps(cloud,local){return{...(cloud||{}),...(local||{})};}
+// 依 _t 時間戳決定每個 key 保留哪一邊，讓「刪除墓碑」能贏過另一裝置的舊資料，
+// 而不是像過去單純疊加兩邊內容、刪除永遠會被沒同步到的舊資料復活覆蓋
+function mergeMaps(cloud,local){
+  cloud=cloud||{};local=local||{};
+  const out={};
+  new Set([...Object.keys(cloud),...Object.keys(local)]).forEach(k=>{
+    const c=cloud[k],l=local[k];
+    if(c&&l)out[k]=(l._t||0)>=(c._t||0)?l:c;
+    else out[k]=c||l;
+  });
+  return out;
+}
 
 function mergePlans(cloudArr,localArr){
   cloudArr=cloudArr||[];localArr=localArr||[];
@@ -2655,7 +2678,10 @@ function mergePlans(cloudArr,localArr){
   cloudArr.forEach(p=>{byId[p.id]=p;});
   localArr.forEach(p=>{
     const existing=byId[p.id];
-    if(!existing||doneCount(p)>=doneCount(existing))byId[p.id]=p;
+    if(!existing){byId[p.id]=p;return;}
+    // 計畫 id 不會重複使用，任一邊標記刪除就永久視為已刪除，不需要比時間戳
+    if(existing._deleted||p._deleted){byId[p.id]={...existing,...p,_deleted:true};return;}
+    if(doneCount(p)>=doneCount(existing))byId[p.id]=p;
   });
   return Object.values(byId);
 }
