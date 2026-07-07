@@ -88,7 +88,6 @@ select,input[type=text]{padding:7px;border:1px solid #D4A876;border-radius:4px;f
 <div class="wrap">
 <h1>📚 法規練習系統</h1>
 <div id="authBox" style="text-align:center;margin:-8px 0 16px;font-size:13px;color:#795548"></div>
-<div id="authDebug" style="text-align:center;font-size:11px;color:#C0614A;margin:-12px 0 16px"></div>
 <div class="tabs">
   <button class="tb on" onclick="ST('t1')">抽題模式</button>
   <button class="tb" onclick="ST('t2')">挖空選擇題</button>
@@ -2766,20 +2765,10 @@ if(cloudSyncEnabled){
   firebase.initializeApp(firebaseConfig);
   auth=firebase.auth();
   db=firebase.firestore();
-  // 暫時性除錯訊息，排查完手機登入問題後會移除
-  const dbg=eid('authDebug');
-  if(dbg)dbg.textContent='偵測登入跳轉結果中...';
-  auth.getRedirectResult().then(result=>{
-    if(!dbg)return;
-    dbg.textContent=(result&&result.user)?`✅ redirect 已取得使用者：${result.user.email}`:'ℹ️ 沒有偵測到 redirect 登入結果（可能只是一般頁面載入）';
-  }).catch(e=>{
-    if(dbg)dbg.textContent=`❌ redirect 登入失敗：[${e.code}] ${e.message}`;
-    alert('登入失敗：'+e.message);
-  });
+  auth.getRedirectResult().catch(e=>alert('登入失敗：'+e.message));
   auth.onAuthStateChanged(user=>{
     currentUser=user;
     updateAuthUI();
-    if(dbg)dbg.textContent+=` ｜ onAuthStateChanged: ${user?'已登入 '+user.email:'未登入'}`;
     if(user)startCloudSync();else stopCloudSync();
   });
 }else{
