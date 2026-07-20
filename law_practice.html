@@ -64,9 +64,9 @@ select,input[type=text]{padding:7px;border:1px solid #D4A876;border-radius:4px;f
 .diff-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
 .diff-tag{font-size:12px;font-weight:bold;color:#795548;min-width:60px;white-space:nowrap;padding-top:3px;flex-shrink:0}
 .diff-text{font-size:14px;line-height:1.85;word-break:break-all;flex:1;white-space:pre-wrap;background:#FFF8F2;padding:6px 8px;border-radius:3px;border:1px solid #E8D5C0}
-.dc-ok{color:#6B8F5E}
 .dc-wrong{color:#C0614A;background:#F5DCD3;border-radius:2px;padding:0 1px}
 .dc-miss{color:#C0614A;background:#F5DCD3;border-bottom:2px solid #C0614A;display:inline-block;min-width:.7em;border-radius:2px 2px 0 0}
+.dc-extra{color:#C0614A;background:#F5DCD3;text-decoration:line-through;border-radius:2px;padding:0 1px}
 .diff-cnt{font-size:13px;color:#9C8778;text-align:right;margin-top:2px}
 .plan-day{border:1px solid #D4A876;border-radius:8px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;background:#FFF8F2}
 .plan-day .plan-summary{font-size:14px;color:#795548;margin-top:4px;white-space:pre-wrap}
@@ -1752,13 +1752,10 @@ function chk(){
   const c=S1.cur.a.t;
   S1.att++;
   let html='',cc=0;
-  for(let i=0;i<c.length;i++){
-    const ch=c[i],uc=u[i]||'';
-    if(ch===uc){html+=`<span class="ok">${eh(ch)=='\n'?'<br>':eh(ch)}</span>`;cc++;}
-    else{html+=`<span class="err">${eh(ch)=='\n'?'↵<br>':eh(ch)}</span>`;}
-  }
-  if(u.length>c.length){
-    for(let i=c.length;i<u.length;i++)html+=`<span class="err" style="background:#F5DCD3">${eh(u[i])}</span>`;
+  for(const[t,txt]of diffOps(u,c)){
+    if(t===0){cc+=txt.length;html+=`<span class="ok">${eh(txt).replace(/\n/g,'<br>')}</span>`;}
+    else if(t===1){html+=`<span class="err">${eh(txt).replace(/\n/g,'↵<br>')}</span>`;}
+    else{html+=`<span class="err" style="background:#F5DCD3;text-decoration:line-through">${eh(txt).replace(/\n/g,'<br>')}</span>`;}
   }
   S1.tc+=c.length;S1.cc+=cc;
   const pct=Math.round(100*cc/c.length);
@@ -1983,38 +1980,79 @@ function pracLog(){
   alert(`已載入 ${pool.length} 條錯題，請點擊「抽題」開始練習。`);
 }
 
-// ===== DIFF =====
+// ===== DIFF（LCS 最長共同子序列比對）=====
+// 回傳編輯操作序列：[type, text]，type 0=相同、-1=僅使用者答案有（多字）、1=僅正確答案有（漏字）
+function diffOps(u,c){
+  let s=0;
+  while(s<u.length&&s<c.length&&u[s]===c[s])s++;
+  let e1=u.length,e2=c.length;
+  while(e1>s&&e2>s&&u[e1-1]===c[e2-1]){e1--;e2--;}
+  const a=u.slice(s,e1),b=c.slice(s,e2);
+  let mid;
+  if(!a&&!b)mid=[];
+  else if(!a)mid=[[1,b]];
+  else if(!b)mid=[[-1,a]];
+  else if(a.length*b.length>4e6)mid=[[-1,a],[1,b]]; // 差異區塊過大時退化為整段替換，避免 DP 記憶體爆量
+  else mid=lcsOps(a,b);
+  const ops=[];
+  if(s)ops.push([0,u.slice(0,s)]);
+  for(const op of mid)ops.push(op);
+  if(e1<u.length)ops.push([0,u.slice(e1)]);
+  return ops;
+}
+function lcsOps(a,b){
+  const n=a.length,m=b.length,w=m+1;
+  const dp=new Int32Array((n+1)*w);
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--){
+    dp[i*w+j]=a[i]===b[j]?dp[(i+1)*w+j+1]+1:Math.max(dp[(i+1)*w+j],dp[i*w+j+1]);
+  }
+  const ops=[];
+  const push=(t,ch)=>{const L=ops[ops.length-1];if(L&&L[0]===t)L[1]+=ch;else ops.push([t,ch]);};
+  let i=0,j=0;
+  while(i<n&&j<m){
+    if(a[i]===b[j]){push(0,a[i]);i++;j++;}
+    else if(dp[(i+1)*w+j]>=dp[i*w+j+1]){push(-1,a[i]);i++;}
+    else{push(1,b[j]);j++;}
+  }
+  while(i<n)push(-1,a[i++]);
+  while(j<m)push(1,b[j++]);
+  return ops;
+}
 function buildDiff(u,c){
-  const maxLen=Math.max(u.length,c.length);
-  let h1='',h2='',cnt=0;
-  for(let i=0;i<maxLen;i++){
-    const cu=i<u.length?u[i]:null;
-    const cc=i<c.length?c[i]:null;
-    if(cu===cc){
+  const ops=diffOps(u,c);
+  const isWs=ch=>ch===' '||ch==='\n'||ch==='\t'||ch==='　';
+  const plain=t=>eh(t).replace(/\n/g,'<br>');
+  let h1='',h2='',cnt=0,k=0;
+  while(k<ops.length){
+    if(ops[k][0]===0){
+      h1+=plain(ops[k][1]);h2+=plain(ops[k][1]);k++;continue;
+    }
+    // 收集相鄰的差異區段：ext=使用者多出的字、mis=正確答案缺少的字
+    let ext='',mis='';
+    while(k<ops.length&&ops[k][0]!==0){
+      if(ops[k][0]===-1)ext+=ops[k][1];else mis+=ops[k][1];
+      k++;
+    }
+    // 多字與漏字相鄰時，逐字配對視為「錯字」
+    const sub=Math.min(ext.length,mis.length);
+    for(let p=0;p<sub;p++){
+      const cu=ext[p],cc=mis[p];
+      if(!(isWs(cu)&&isWs(cc)))cnt++;
+      h1+=cu==='\n'?'<br>':`<span class="dc-wrong">${eh(cu)}</span>`;
+      h2+=cc==='\n'?'<br>':`<mark class="hl">${eh(cc)}</mark>`;
+    }
+    // 多字：紅色刪除線
+    for(let p=sub;p<ext.length;p++){
+      const cu=ext[p];
+      if(!isWs(cu))cnt++;
+      h1+=cu==='\n'?'<br>':`<span class="dc-extra">${eh(cu)}</span>`;
+    }
+    // 漏字：使用者答案處以紅底線空格標示，正確答案標黃
+    for(let p=sub;p<mis.length;p++){
+      const cc=mis[p];
+      if(!isWs(cc))cnt++;
       if(cc==='\n'){h1+='<br>';h2+='<br>';}
-      else{h1+=`<span class="dc-ok">${eh(cu)}</span>`;h2+=eh(cc);}
-    } else {
-      // Count diff: skip spaces and newlines in correct answer
-      if(cc!==null&&cc!==' '&&cc!=='\n')cnt++;
-      // Line 1: user's answer
-      if(cu===null){
-        // Missing char
-        if(cc==='\n'){h1+='<br>';}
-        else{h1+='<span class="dc-miss">&thinsp;</span>';}
-      } else if(cu==='\n'){
-        h1+='<br>';
-      } else {
-        h1+=`<span class="dc-wrong">${eh(cu)}</span>`;
-        if(cc==='\n')h1+='<br>';
-      }
-      // Line 2: correct answer
-      if(cc===null){
-        // Extra char typed by user — nothing in line 2
-      } else if(cc==='\n'){
-        h2+='<br>';
-      } else {
-        h2+=`<mark class="hl">${eh(cc)}</mark>`;
-      }
+      else{h1+='<span class="dc-miss">&thinsp;</span>';h2+=`<mark class="hl">${eh(cc)}</mark>`;}
     }
   }
   return{h1,h2,cnt};
