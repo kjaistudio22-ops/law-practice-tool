@@ -1,0 +1,22 @@
+name: 部署到 Firebase Hosting
+
+# 每次 main 分支有新的 commit 推送時，自動部署到正式站台
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 取出程式碼
+        uses: actions/checkout@v4
+
+      - name: 部署到 Firebase Hosting（live 頻道）
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ACC_KJ }}
+          channelId: live
+          projectId: acc-kj
